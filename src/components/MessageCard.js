@@ -64,8 +64,7 @@ const Message = styled(motion.p)`
   line-height: 1.7;
   color: #333;
   margin-bottom: 25px;
-  font-family: 'Comic Sans MS', 'Bubblegum Sans', 'Indie Flower', cursive;
-  text-align: center;
+font-family: 'Roboto', monospace;
   position: relative;
   
   &:first-letter {
@@ -217,7 +216,7 @@ const HeartRow = styled(motion.div)`
 const FinalMessage = styled(motion.div)`
   font-size: 4rem;
   color: white;
-  font-family: 'Pacifico', cursive;
+font-family: 'Roboto', monospace;
   text-shadow: 0 0 20px #ff69b4, 0 0 30px #ff69b4;
   z-index: 1001;
   position: absolute;

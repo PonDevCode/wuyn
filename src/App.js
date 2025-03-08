@@ -58,7 +58,7 @@ const Title = styled(motion.h1)`
   margin-bottom: 20px;
   margin-top: 20px;
   z-index: 10;
-  font-family: 'Pacifico', cursive;
+  font-family: 'Roboto', sans-serif;
   letter-spacing: 1px;
   text-align: center;
   padding: 0 15px;
