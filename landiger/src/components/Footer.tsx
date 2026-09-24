@@ -87,6 +87,20 @@ const flows: [path: string, duration: number, begin: number][] = [
   ['M2560 390Q2240 245 1920 160', 2.6, -1.85],
 ];
 
+// Footer links; pages that don't exist yet stay "#".
+const hrefs: Record<string, string> = {
+  Website: '/#giai-phap',
+  'Đặt lịch hẹn': '/#giai-phap',
+  'Khách hàng · CRM': '/#giai-phap',
+  'Marketing tự động': '/#giai-phap',
+  'Spa & Beauty': '/#nganh-nghe',
+  'Salon tóc': '/#nganh-nghe',
+  'Phòng khám': '/#nganh-nghe',
+  'Giáo dục': '/#nganh-nghe',
+  'Bảng giá': '/#bang-gia',
+  'Tin tức': '/tin-tuc',
+  'Liên hệ': '#lien-he',
+};
 const columns: [title: string, links: string[]][] = [
   ['Sản phẩm', ['Website', 'Đặt lịch hẹn', 'Khách hàng · CRM', 'Marketing tự động']],
   ['Ngành nghề', ['Spa & Beauty', 'Salon tóc', 'Phòng khám', 'Giáo dục']],
@@ -117,9 +131,16 @@ const socials: [label: string, color: string, path: string][] = [
   ],
 ];
 
-export default function Footer() {
+/** `fadeTop`: soften the seam with a background drawn behind the page (the blog's pinned grid). */
+export default function Footer({ fadeTop = false }: { fadeTop?: boolean }) {
   return (
-    <section id="lien-he">
+    <section id="lien-he" className="relative">
+      {fadeTop && (
+        <div
+          aria-hidden="true"
+          className="pointer-events-none absolute inset-x-0 bottom-full h-20 bg-gradient-to-b from-page/0 to-page"
+        />
+      )}
       {/* Closing CTA */}
       <div className="relative h-[520px] overflow-hidden bg-page sm:h-[560px]">
         <div
@@ -130,6 +151,9 @@ export default function Footer() {
             WebkitMaskImage: 'radial-gradient(ellipse max(34%, 360px) 42% at 50% 45%, #000 30%, transparent)',
           }}
         />
+        {fadeTop && (
+          <div aria-hidden="true" className="absolute inset-x-0 top-0 h-28 bg-gradient-to-b from-page to-page/0" />
+        )}
         <div
           aria-hidden="true"
           className="absolute left-1/2 top-[210px] -ml-[450px] -mt-[210px] h-[420px] w-[900px] rounded-full bg-[radial-gradient(closest-side,rgba(0,75,236,0.10),rgba(0,75,236,0))]"
@@ -283,7 +307,7 @@ export default function Footer() {
             <nav key={title} aria-label={title} className="flex flex-col gap-3">
               <div className="text-sm font-extrabold text-ink">{title}</div>
               {items.map((it) => (
-                <a key={it} href="#" className="text-sm text-muted">
+                <a key={it} href={hrefs[it] ?? '#'} className="text-sm text-muted">
                   {it}
                 </a>
               ))}

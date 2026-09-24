@@ -3,6 +3,7 @@ import { Be_Vietnam_Pro } from 'next/font/google';
 import PlaceholderLinkGuard from '@/components/PlaceholderLinkGuard';
 import DemoDialog from '@/components/DemoDialog';
 import TrialDialog from '@/components/TrialDialog';
+import VideoDialog from '@/components/VideoDialog';
 import { SITE_DESCRIPTION, SITE_KEYWORDS, SITE_NAME, SITE_TITLE, SITE_URL } from '@/lib/site';
 import './globals.css';
 
@@ -47,6 +48,7 @@ export default function RootLayout({ children }: Readonly<{ children: React.Reac
         <PlaceholderLinkGuard />
         <TrialDialog />
         <DemoDialog />
+        <VideoDialog />
         {children}
       </body>
     </html>
