@@ -1,4 +1,5 @@
 import Header from '@/components/Header';
+import StructuredData from '@/components/StructuredData';
 import Hero from '@/components/Hero';
 import Marquee from '@/components/Marquee';
 import Solution from '@/components/Solution';
@@ -10,6 +11,7 @@ import Footer from '@/components/Footer';
 export default function Home() {
   return (
     <>
+      <StructuredData />
       <Header />
       <main>
         <Hero />
