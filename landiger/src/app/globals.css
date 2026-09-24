@@ -17,7 +17,7 @@
 
   --shadow-card: 0 1px 2px rgba(11, 20, 36, 0.05), 0 14px 30px -16px rgba(11, 20, 36, 0.22);
   --shadow-lift: 0 40px 80px -40px rgba(11, 20, 36, 0.35);
-  --shadow-btn: 0 14px 26px -14px rgba(0, 75, 236, 0.7);
+  --shadow-btn: 0 8px 18px -10px rgba(0, 75, 236, 0.45);
 
   --ease-out-soft: cubic-bezier(0.2, 0.8, 0.2, 1);
 

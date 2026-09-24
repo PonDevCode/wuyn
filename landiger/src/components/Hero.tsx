@@ -1,6 +1,7 @@
 'use client';
 
 import { useEffect, useRef, useState } from 'react';
+import HeroGrid from './HeroGrid';
 import HeroLanes from './HeroLanes';
 import HeroDashboard from './HeroDashboard';
 import Scaler from './Scaler';
@@ -80,11 +81,8 @@ export default function Hero() {
       ref={bannerRef}
       aria-label="Giới thiệu"
       className={`relative w-full overflow-hidden bg-page lg:h-[760px] ${slide === 0 ? 'h-[600px] sm:h-[700px]' : ''}`}
-      style={{
-        backgroundImage:
-          'repeating-linear-gradient(12.4deg, #E1E7F1 0 1px, transparent 1px 62px), repeating-linear-gradient(121.8deg, #E1E7F1 0 1px, transparent 1px 62px)',
-      }}
     >
+      <HeroGrid />
       {slide === 0 && (
         <div className="absolute inset-0 animate-fade-in">
           {/* 1440px stage centred on the viewport: phones see its middle */}
