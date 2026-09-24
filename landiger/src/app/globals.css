@@ -295,6 +295,43 @@
   animation-name: ft-bottom;
 }
 
+/* Cords to the logo, in step with .animate-tool (7s): drawn out from the pill as it appears,
+   retracted into the logo as the pill is absorbed. Paths use pathLength="1" and start at the pill. */
+@keyframes ft-cord {
+  0% {
+    stroke-dashoffset: 1;
+  }
+  8%,
+  55% {
+    stroke-dashoffset: 0;
+  }
+  78%,
+  100% {
+    stroke-dashoffset: -1;
+  }
+}
+@keyframes ft-cord-dots {
+  0%,
+  6% {
+    opacity: 0;
+  }
+  12%,
+  55% {
+    opacity: 1;
+  }
+  66%,
+  100% {
+    opacity: 0;
+  }
+}
+.ft-cord {
+  stroke-dasharray: 1 1;
+  animation: ft-cord 7s cubic-bezier(0.5, 0, 0.3, 1) infinite both;
+}
+.ft-cord-dots {
+  animation: ft-cord-dots 7s linear infinite both;
+}
+
 @media (prefers-reduced-motion: reduce) {
   [data-reveal] {
     opacity: 1;

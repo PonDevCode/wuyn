@@ -53,27 +53,40 @@ export default function Footer() {
           aria-hidden="true"
           className="absolute left-1/2 top-[210px] -ml-[450px] -mt-[210px] h-[420px] w-[900px] rounded-full bg-[radial-gradient(closest-side,rgba(0,75,236,0.10),rgba(0,75,236,0))]"
         />
-        <LiveSvg
-          width="3840"
-          height="560"
-          viewBox="0 0 3840 560"
-          aria-hidden="true"
-          className="absolute left-1/2 top-0 -ml-[1920px] max-sm:hidden"
-        >
-          {flows.map(([d, dur, begin]) => (
-            <g key={d}>
-              <path d={d} fill="none" stroke="#004BEC" strokeOpacity="0.22" strokeWidth="1" />
-              <circle r="6" fill="#0095FE" fillOpacity="0.2">
-                <animateMotion dur={`${dur}s`} begin={`${begin}s`} repeatCount="indefinite" path={d} />
-              </circle>
-              <circle r="2.6" fill="#0095FE">
-                <animateMotion dur={`${dur}s`} begin={`${begin}s`} repeatCount="indefinite" path={d} />
-              </circle>
-            </g>
-          ))}
-        </LiveSvg>
 
         <Reveal className="absolute inset-0">
+          <LiveSvg
+            width="3840"
+            height="560"
+            viewBox="0 0 3840 560"
+            aria-hidden="true"
+            className="absolute left-1/2 top-0 -ml-[1920px] max-sm:hidden"
+          >
+            {flows.map(([d, dur, begin], i) => (
+              <g key={d}>
+                {/* Cord i belongs to tool i: it grows out with the pill and retracts into the logo with it */}
+                <path
+                  d={d}
+                  pathLength={1}
+                  className="ft-cord"
+                  style={{ animationDelay: `${i * 0.08}s` }}
+                  fill="none"
+                  stroke="#004BEC"
+                  strokeOpacity="0.22"
+                  strokeWidth="1"
+                />
+                <g className="ft-cord-dots" style={{ animationDelay: `${i * 0.08}s` }}>
+                  <circle r="6" fill="#0095FE" fillOpacity="0.2">
+                    <animateMotion dur={`${dur}s`} begin={`${begin}s`} repeatCount="indefinite" path={d} />
+                  </circle>
+                  <circle r="2.6" fill="#0095FE">
+                    <animateMotion dur={`${dur}s`} begin={`${begin}s`} repeatCount="indefinite" path={d} />
+                  </circle>
+                </g>
+              </g>
+            ))}
+          </LiveSvg>
+
           {/* Offsets shrink on small screens (--kx/--ky) so the pills stay on screen. */}
           <div className="absolute inset-0 [--kx:0.21] [--ky:0.6] sm:[--kx:0.6] sm:[--ky:0.8] lg:[--kx:1] lg:[--ky:1]">
             {tools.map(([label, badge, color, x, y], i) => (
