@@ -62,7 +62,7 @@ export default function Solution() {
     <section
       ref={sectionRef}
       id="giai-phap"
-      className="relative grid grid-cols-[minmax(0,1fr)] gap-10 overflow-hidden px-4 py-16 sm:px-8 lg:grid-cols-[minmax(0,470px)_minmax(0,620px)] lg:items-center lg:justify-between lg:gap-12 lg:px-[max(32px,calc(50%-580px))] lg:py-[100px]"
+      className="relative grid grid-cols-[minmax(0,1fr)] gap-10 overflow-hidden px-4 py-16 sm:px-8 lg:grid-cols-[minmax(0,470px)_minmax(0,620px)] lg:items-center lg:justify-between lg:gap-12 lg:px-[max(32px,calc(50%-580px))] lg:py-20"
     >
       <div
         aria-hidden="true"

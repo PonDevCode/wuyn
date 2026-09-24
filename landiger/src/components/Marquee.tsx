@@ -21,7 +21,7 @@ export default function Marquee() {
   return (
     <section
       id="nganh-nghe"
-      className="relative flex flex-col items-center gap-8 overflow-hidden py-12 sm:gap-12 sm:py-16"
+      className="relative flex flex-col items-center gap-8 overflow-hidden pb-10 pt-4 sm:gap-10 sm:pb-12 sm:pt-6"
     >
       <div
         aria-hidden="true"

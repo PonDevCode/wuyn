@@ -79,7 +79,7 @@ export default function Hero() {
     <section
       ref={bannerRef}
       aria-label="Giới thiệu"
-      className={`relative w-full overflow-hidden bg-page lg:h-[820px] ${slide === 0 ? 'h-[600px] sm:h-[700px]' : ''}`}
+      className={`relative w-full overflow-hidden bg-page lg:h-[760px] ${slide === 0 ? 'h-[600px] sm:h-[700px]' : ''}`}
       style={{
         backgroundImage:
           'repeating-linear-gradient(12.4deg, #E1E7F1 0 1px, transparent 1px 62px), repeating-linear-gradient(121.8deg, #E1E7F1 0 1px, transparent 1px 62px)',
@@ -134,7 +134,7 @@ export default function Hero() {
       )}
 
       {slide === 1 && (
-        <div className="relative flex animate-fade-in flex-col gap-10 px-4 pb-24 pt-24 sm:px-8 lg:absolute lg:inset-0 lg:grid lg:grid-cols-[minmax(0,600px)_minmax(0,660px)] lg:items-center lg:justify-between lg:gap-10 lg:py-0 lg:pl-[max(32px,calc(50%-600px))] lg:pr-[max(32px,calc(50%-640px))]">
+        <div className="relative flex animate-fade-in flex-col gap-10 px-4 pb-24 pt-24 sm:px-8 lg:absolute lg:inset-0 lg:grid lg:grid-cols-[minmax(0,600px)_minmax(0,660px)] lg:items-center lg:justify-between lg:gap-10 lg:pb-0 lg:pt-[72px] lg:pl-[max(32px,calc(50%-600px))] lg:pr-[max(32px,calc(50%-640px))]">
           <div className="flex flex-col gap-5 lg:gap-6">
             <div className="flex h-10 items-center gap-2.5 self-start whitespace-nowrap rounded-full border border-[#D9DBE0] bg-white px-[18px] text-[10px] font-semibold tracking-[0.1em] sm:text-xs sm:tracking-[0.14em]">
               <span className="size-[7px] rounded-full bg-sky" />
