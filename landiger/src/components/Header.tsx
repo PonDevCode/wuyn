@@ -15,7 +15,7 @@ const links = [
 ];
 
 const ctaCls =
-  'flex h-10 items-center justify-center whitespace-nowrap rounded-full bg-brand px-5 text-sm font-semibold text-white hover:bg-[#0040cc] hover:text-white';
+  'flex h-9 items-center justify-center whitespace-nowrap rounded-full bg-brand px-5 text-sm font-semibold text-white hover:bg-[#0040cc] hover:text-white';
 
 export default function Header() {
   const [open, setOpen] = useState(false);
@@ -48,15 +48,15 @@ export default function Header() {
 
   return (
     <header
-      className={`fixed inset-x-0 top-0 z-50 flex h-16 items-center justify-between border-b px-4 transition-[background-color,border-color,box-shadow] duration-300 lg:h-[72px] lg:px-8 xl:px-[max(120px,calc(50%-600px))] ${
+      className={`fixed inset-x-0 top-0 z-50 flex h-14 items-center justify-between border-b px-4 transition-[background-color,border-color,box-shadow] duration-300 lg:h-16 lg:px-8 xl:px-[max(120px,calc(50%-600px))] ${
         scrolled || open
           ? 'border-[#E8E9EC] bg-white shadow-[0_8px_24px_-18px_rgba(11,20,36,0.35)]'
           : 'border-transparent bg-transparent'
       } ${scrolled ? 'animate-slide-down' : ''}`}
     >
       <a href="/#top" aria-label="Landiger – Trang chủ" className="flex items-center gap-2.5 lg:gap-3">
-        <Logo id="lgBarNav" size={36} className="size-8 lg:size-10" />
-        <Wordmark className="h-4 w-auto lg:h-[19px]" />
+        <Logo id="lgBarNav" size={36} className="size-8 lg:size-9" />
+        <Wordmark className="h-4 w-auto lg:h-[17px]" />
       </a>
 
       <nav aria-label="Điều hướng chính" className="hidden gap-6 text-sm font-medium lg:flex xl:gap-8">
