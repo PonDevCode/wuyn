@@ -124,7 +124,7 @@ export default function Hero() {
               <a href="#" data-trial className={`${primaryBtn} h-[50px] px-6 text-[15px]`}>
                 Bắt đầu miễn phí <span aria-hidden="true">→</span>
               </a>
-              <a href="#" className={`${secondaryBtn} h-[50px] px-[22px] text-[15px]`}>
+              <a href="#" data-demo className={`${secondaryBtn} h-[50px] px-[22px] text-[15px]`}>
                 Xem demo
               </a>
             </div>
@@ -152,7 +152,7 @@ export default function Hero() {
               <a href="#" data-trial className={`${primaryBtn} h-12 px-6 text-[15px] font-semibold`}>
                 Bắt đầu miễn phí <span aria-hidden="true">→</span>
               </a>
-              <a href="#" className={`${secondaryBtn} h-12 border-[#D9DBE0] px-[22px] text-[15px] font-semibold`}>
+              <a href="#" data-demo className={`${secondaryBtn} h-12 border-[#D9DBE0] px-[22px] text-[15px] font-semibold`}>
                 Xem demo
               </a>
             </div>

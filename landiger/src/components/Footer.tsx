@@ -242,6 +242,7 @@ export default function Footer() {
               </a>
               <a
                 href="#"
+                data-demo
                 className="flex h-12 items-center rounded-xl border border-line bg-white px-[22px] text-[15px] font-bold text-ink"
               >
                 Đặt lịch demo

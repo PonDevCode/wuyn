@@ -1,9 +1,12 @@
 'use client';
 
-import { cloneElement, useEffect, useId, useRef, useState, type ReactElement, type ReactNode } from 'react';
+import { useEffect, useId, useRef, useState, type ReactNode } from 'react';
 import QRCode from 'qrcode';
 import { findPlan, formatVnd, priceFor, type Cycle, type Plan } from '@/lib/plans';
 import { newPaymentCode, PAYMENT_ACCOUNT, vietQrPayload } from '@/lib/payment';
+import { isEmail, isFilled, isPhone } from '@/lib/validate';
+import { useModal, useTrigger } from '@/hooks/useModal';
+import Field from './FormField';
 import Logo from './Logo';
 
 /**
@@ -13,11 +16,8 @@ import Logo from './Logo';
  * (email → phone → password → confirm password → business name).
  */
 
-const isEmail = (v: string) => /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(v.trim());
-// Vietnamese mobile numbers: 0 or +84 followed by 3/5/7/8/9 and 8 more digits.
-const isPhone = (v: string) => /^(0|\+84)(3|5|7|8|9)\d{8}$/.test(v.replace(/[\s.-]/g, ''));
 const isPassword = (v: string) => v.length >= 8;
-const isBusiness = (v: string) => v.trim().length >= 2;
+const isBusiness = (v: string) => isFilled(v);
 
 type Values = { email: string; phone: string; password: string; confirm: string; business: string };
 const empty: Values = { email: '', phone: '', password: '', confirm: '', business: '' };
@@ -55,24 +55,14 @@ export default function TrialDialog() {
   const step = [valid.email, valid.phone, valid.password, valid.confirm, valid.business].filter(Boolean).length;
 
   // Open from any [data-trial] element on the page.
-  useEffect(() => {
-    const onClick = (e: MouseEvent) => {
-      const trigger = (e.target as Element | null)?.closest?.('[data-trial]');
-      if (!trigger) return;
-      e.preventDefault();
-      const el = trigger as HTMLElement;
-      lastTrigger.current = el;
-      const plan = findPlan(el.dataset.plan);
-      const cycle: Cycle = el.dataset.cycle === 'year' ? 'year' : 'month';
-      const amount = plan ? priceFor(plan, cycle) : null;
-      // Start a fresh form unless the visitor is coming back to one they were filling in.
-      setView((v) => (v === 'form' ? v : 'form'));
-      setOrder(plan && amount !== null ? { plan, cycle, amount, code: '' } : null);
-      setOpen(true);
-    };
-    document.addEventListener('click', onClick);
-    return () => document.removeEventListener('click', onClick);
-  }, []);
+  useTrigger('data-trial', (el) => {
+    lastTrigger.current = el;
+    const plan = findPlan(el.dataset.plan);
+    const cycle: Cycle = el.dataset.cycle === 'year' ? 'year' : 'month';
+    const amount = plan ? priceFor(plan, cycle) : null;
+    setOrder(plan && amount !== null ? { plan, cycle, amount, code: '' } : null);
+    setOpen(true);
+  });
 
   const close = () => {
     setOpen(false);
@@ -84,41 +74,7 @@ export default function TrialDialog() {
     lastTrigger.current?.focus();
   };
 
-  // While open: lock page scroll, Escape closes, Tab stays inside the dialog.
-  useEffect(() => {
-    if (!open) return undefined;
-    const prevOverflow = document.body.style.overflow;
-    document.body.style.overflow = 'hidden';
-    const t = setTimeout(
-      () => dialogRef.current?.querySelector<HTMLElement>('input, button[type="submit"]')?.focus(),
-      60,
-    );
-
-    const onKey = (e: KeyboardEvent) => {
-      if (e.key === 'Escape') close();
-      if (e.key !== 'Tab' || !dialogRef.current) return;
-      const items = [...dialogRef.current.querySelectorAll<HTMLElement>('button, input, a[href]')].filter(
-        (el) => !el.hasAttribute('disabled') && el.tabIndex !== -1 && el.offsetParent !== null,
-      );
-      if (!items.length) return;
-      const first = items[0];
-      const last = items[items.length - 1];
-      if (e.shiftKey && document.activeElement === first) {
-        e.preventDefault();
-        last.focus();
-      } else if (!e.shiftKey && document.activeElement === last) {
-        e.preventDefault();
-        first.focus();
-      }
-    };
-    document.addEventListener('keydown', onKey);
-    return () => {
-      clearTimeout(t);
-      document.body.style.overflow = prevOverflow;
-      document.removeEventListener('keydown', onKey);
-    };
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [open]);
+  useModal(open, dialogRef, close);
 
   const set = (key: keyof Values) => (e: React.ChangeEvent<HTMLInputElement>) =>
     setValues((v) => ({ ...v, [key]: e.target.value }));
@@ -684,63 +640,6 @@ function SuccessView({ titleId, email, business, order, onClose }: SuccessProps)
             Vào Landiger <span aria-hidden="true">→</span>
           </a>
         </div>
-      </div>
-    </div>
-  );
-}
-
-type FieldProps = {
-  show: boolean;
-  label: string;
-  hint?: string;
-  error?: string;
-  ok?: boolean;
-  trailing?: ReactNode;
-  children: ReactElement<{ id?: string }>;
-};
-
-/** A form row that slides open when `show` turns true. */
-function Field({ show, label, hint, error, ok, trailing, children }: FieldProps) {
-  const id = useId();
-  return (
-    <div
-      className={`grid transition-[grid-template-rows,opacity,transform] duration-500 ease-[cubic-bezier(.2,.8,.2,1)] ${
-        show ? 'grid-rows-[1fr] opacity-100' : 'pointer-events-none grid-rows-[0fr] -translate-y-2 opacity-0'
-      }`}
-      aria-hidden={!show}
-      inert={!show}
-    >
-      <div className="overflow-hidden">
-        <label htmlFor={id} className="mb-1 flex items-center justify-between text-xs font-semibold text-ink">
-          {label}
-          {hint && <span className="font-normal text-faint">{hint}</span>}
-        </label>
-        <div
-          className={`flex h-10 items-center rounded-[10px] border bg-white transition-colors focus-within:border-brand focus-within:ring-4 focus-within:ring-brand/10 ${
-            error ? 'border-[#E5484D]' : 'border-[#D6DEEB]'
-          } [&>input]:h-full [&>input]:min-w-0 [&>input]:flex-1 [&>input]:bg-transparent [&>input]:px-3 [&>input]:text-sm [&>input]:outline-none [&>input]:placeholder:text-faint`}
-        >
-          {cloneElement(children, { id })}
-          {trailing}
-          {ok && (
-            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" className="mr-3 shrink-0" aria-hidden="true">
-              <circle cx="12" cy="12" r="10" fill="#E8F7EF" />
-              <path
-                d="M7.5 12.5l3 3L16.5 9"
-                stroke="#067647"
-                strokeWidth="2.2"
-                strokeLinecap="round"
-                strokeLinejoin="round"
-              />
-            </svg>
-          )}
-        </div>
-        {error && (
-          <p className="pt-1 text-[11px] text-[#C13A3F]" role="alert">
-            {error}
-          </p>
-        )}
-        <div className="h-3" />
       </div>
     </div>
   );
