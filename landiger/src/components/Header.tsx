@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from 'react';
 import Logo from './Logo';
+import Wordmark from './Wordmark';
 
 const links = [
   { href: '#top', label: 'Trang chủ' },
@@ -50,9 +51,9 @@ export default function Header() {
           : 'border-transparent bg-transparent'
       } ${scrolled ? 'animate-slide-down' : ''}`}
     >
-      <a href="#top" className="flex items-center gap-2.5 text-xl font-bold tracking-[-0.02em] lg:text-[22px]">
-        <Logo id="lgBarNav" size={30} />
-        Landiger
+      <a href="#top" aria-label="Landiger – Trang chủ" className="flex items-center gap-2.5 lg:gap-3">
+        <Logo id="lgBarNav" size={36} className="size-8 lg:size-10" />
+        <Wordmark className="h-4 w-auto lg:h-[19px]" />
       </a>
 
       <nav aria-label="Điều hướng chính" className="hidden gap-6 text-sm font-medium lg:flex xl:gap-8">

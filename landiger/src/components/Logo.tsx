@@ -11,7 +11,7 @@ export default function Logo({ id, size = 34, className, pieceClassNames = {} }:
     <svg
       width={size}
       height={size}
-      viewBox="262 88 470 492"
+      viewBox="283 104 426 460"
       className={className}
       style={{ display: 'block', overflow: 'visible' }}
       aria-hidden="true"

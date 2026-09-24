@@ -1,6 +1,7 @@
 import type { CSSProperties } from 'react';
 import LiveSvg from './LiveSvg';
 import Logo from './Logo';
+import Wordmark from './Wordmark';
 import Reveal from './Reveal';
 
 // Tools that get "absorbed" into the Landiger logo. [label, badge, colour, x, y] — offsets from the logo centre.
@@ -157,8 +158,8 @@ export default function Footer() {
         <div className="grid grid-cols-2 gap-x-6 gap-y-9 pb-10 pt-12 sm:grid-cols-3 lg:flex lg:gap-[72px] lg:pb-14 lg:pt-14">
           <div className="col-span-2 flex flex-col gap-4 sm:col-span-3 lg:w-80 lg:shrink-0">
             <div className="flex items-center gap-2.5">
-              <Logo id="ftSmall" />
-              <span className="text-[22px] font-extrabold tracking-[-0.02em]">Landiger</span>
+              <Logo id="ftSmall" size={36} />
+              <Wordmark className="h-[18px] w-auto" />
             </div>
             <p className="max-w-[420px] text-sm leading-[1.65] text-muted">
               Không gian làm việc cho doanh nghiệp dịch vụ: website, đặt lịch, khách hàng và vận hành trong một nền
