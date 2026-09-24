@@ -130,7 +130,7 @@ export default function TrialDialog() {
         role="dialog"
         aria-modal="true"
         aria-labelledby={titleId}
-        className={`relative max-h-[92vh] w-full animate-rise overflow-y-auto rounded-t-3xl bg-white shadow-[0_40px_80px_-30px_rgba(11,20,36,0.45)] sm:max-w-[440px] sm:rounded-3xl ${done ? '' : 'p-6 sm:p-8'}`}
+        className={`relative max-h-[92vh] w-full animate-rise overflow-y-auto rounded-t-3xl bg-white shadow-[0_40px_80px_-30px_rgba(11,20,36,0.45)] sm:max-w-[400px] sm:rounded-3xl ${done ? '' : 'p-5 sm:px-7 sm:py-6'}`}
       >
         <button
           type="button"
@@ -153,17 +153,17 @@ export default function TrialDialog() {
         ) : (
           <form onSubmit={onSubmit} noValidate>
             <div className="flex items-center gap-2.5">
-              <Logo id="trialLogo" size={28} />
+              <Logo id="trialLogo" size={24} />
               <span className="rounded-full bg-tint px-2.5 py-1 text-[11px] font-bold text-brand">
                 Miễn phí 14 ngày
               </span>
             </div>
-            <h2 id={titleId} className="mt-4 text-[22px] font-extrabold leading-tight">
+            <h2 id={titleId} className="mt-3 text-lg font-extrabold leading-tight sm:text-xl">
               Dùng thử Landiger miễn phí
             </h2>
-            <p className="mt-1.5 text-sm text-muted">Không cần thẻ thanh toán. Chỉ mất chưa tới một phút.</p>
+            <p className="mt-1 text-[13px] text-muted">Không cần thẻ thanh toán, chỉ mất chưa tới một phút.</p>
 
-            <div className="mt-5 flex gap-1.5" aria-hidden="true">
+            <div className="mt-4 flex gap-1.5" aria-hidden="true">
               {[0, 1, 2, 3, 4].map((i) => (
                 <span
                   key={i}
@@ -172,7 +172,7 @@ export default function TrialDialog() {
               ))}
             </div>
 
-            <div className="mt-5 flex flex-col">
+            <div className="mt-4 flex flex-col">
               <Field
                 show={shown.email}
                 label="Email công việc"
@@ -274,11 +274,11 @@ export default function TrialDialog() {
             <button
               type="submit"
               disabled={!complete}
-              className="mt-2 flex h-12 w-full cursor-pointer items-center justify-center gap-2 rounded-xl bg-brand text-[15px] font-bold text-white transition-colors hover:bg-[#0040cc] disabled:cursor-not-allowed disabled:bg-[#C9D6F2]"
+              className="mt-1 flex h-11 w-full cursor-pointer items-center justify-center gap-2 rounded-xl bg-brand text-sm font-bold text-white transition-colors hover:bg-[#0040cc] disabled:cursor-not-allowed disabled:bg-[#C9D6F2]"
             >
               Tạo Landiger miễn phí <span aria-hidden="true">→</span>
             </button>
-            <p className="mt-3 text-center text-xs text-faint">
+            <p className="mt-2.5 text-center text-[11px] leading-snug text-faint">
               Bằng việc đăng ký, bạn đồng ý với Điều khoản sử dụng và Chính sách bảo mật của Landiger.
             </p>
           </form>
@@ -432,14 +432,14 @@ function Field({ show, label, hint, error, ok, trailing, children }: FieldProps)
       inert={!show}
     >
       <div className="overflow-hidden">
-        <label htmlFor={id} className="mb-1.5 flex items-center justify-between text-[13px] font-semibold text-ink">
+        <label htmlFor={id} className="mb-1 flex items-center justify-between text-xs font-semibold text-ink">
           {label}
           {hint && <span className="font-normal text-faint">{hint}</span>}
         </label>
         <div
-          className={`flex h-12 items-center rounded-xl border bg-white transition-colors focus-within:border-brand focus-within:ring-4 focus-within:ring-brand/10 ${
+          className={`flex h-10 items-center rounded-[10px] border bg-white transition-colors focus-within:border-brand focus-within:ring-4 focus-within:ring-brand/10 ${
             error ? 'border-[#E5484D]' : 'border-[#D6DEEB]'
-          } [&>input]:h-full [&>input]:min-w-0 [&>input]:flex-1 [&>input]:bg-transparent [&>input]:px-3.5 [&>input]:text-[15px] [&>input]:outline-none [&>input]:placeholder:text-faint`}
+          } [&>input]:h-full [&>input]:min-w-0 [&>input]:flex-1 [&>input]:bg-transparent [&>input]:px-3 [&>input]:text-sm [&>input]:outline-none [&>input]:placeholder:text-faint`}
         >
           {cloneElement(children, { id })}
           {trailing}
@@ -456,13 +456,12 @@ function Field({ show, label, hint, error, ok, trailing, children }: FieldProps)
             </svg>
           )}
         </div>
-        <p
-          className={`min-h-5 pt-1 text-xs ${error ? 'text-[#C13A3F]' : 'text-transparent'}`}
-          role={error ? 'alert' : undefined}
-        >
-          {error || '.'}
-        </p>
-        <div className="h-2" />
+        {error && (
+          <p className="pt-1 text-[11px] text-[#C13A3F]" role="alert">
+            {error}
+          </p>
+        )}
+        <div className="h-3" />
       </div>
     </div>
   );
