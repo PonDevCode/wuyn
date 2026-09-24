@@ -134,7 +134,8 @@ export default function Hero() {
 
       {slide === 1 && (
         <div className="relative flex animate-fade-in flex-col gap-10 px-4 pb-24 pt-24 sm:px-8 lg:absolute lg:inset-0 lg:grid lg:grid-cols-[minmax(0,600px)_minmax(0,660px)] lg:items-center lg:justify-between lg:gap-10 lg:pb-0 lg:pt-[72px] lg:pl-[max(32px,calc(50%-600px))] lg:pr-[max(32px,calc(50%-640px))]">
-          <div className="flex flex-col gap-5 lg:gap-6">
+          {/* Own compositing layer so the animated grid behind never forces this text to re-raster */}
+          <div className="flex flex-col gap-5 will-change-transform lg:gap-6">
             <div className="flex h-10 items-center gap-2.5 self-start whitespace-nowrap rounded-full border border-[#D9DBE0] bg-white px-[18px] text-[10px] font-semibold tracking-[0.1em] sm:text-xs sm:tracking-[0.14em]">
               <span className="size-[7px] rounded-full bg-sky" />
               WORKSPACE · WEBSITE · BOOKING · CRM

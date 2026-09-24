@@ -1,3 +1,5 @@
+import LiveSvg from './LiveSvg';
+
 // Diagonal background grid of the hero, drawn in SVG so light streaks can travel along the lines.
 // Same geometry as the original CSS: two line families at 12.4° and 121.8°, 62px apart.
 
@@ -58,7 +60,7 @@ const SPEED = 2; // multiplier on the base speeds below (1 = ~200px/s)
 
 export default function HeroGrid() {
   return (
-    <svg aria-hidden="true" className="pointer-events-none absolute inset-0 size-full">
+    <LiveSvg aria-hidden="true" className="pointer-events-none absolute inset-0 size-full will-change-transform">
       <svg x="50%" y="50%" overflow="visible">
         <g stroke="#E1E7F1" strokeWidth="1">
           {lines.map((d, i) => (
@@ -90,6 +92,6 @@ export default function HeroGrid() {
           ))}
         </g>
       </svg>
-    </svg>
+    </LiveSvg>
   );
 }

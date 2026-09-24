@@ -1,4 +1,5 @@
 import type { CSSProperties } from 'react';
+import LiveSvg from './LiveSvg';
 import Logo from './Logo';
 import Reveal from './Reveal';
 
@@ -52,7 +53,7 @@ export default function Footer() {
           aria-hidden="true"
           className="absolute left-1/2 top-[210px] -ml-[450px] -mt-[210px] h-[420px] w-[900px] rounded-full bg-[radial-gradient(closest-side,rgba(0,75,236,0.10),rgba(0,75,236,0))]"
         />
-        <svg
+        <LiveSvg
           width="3840"
           height="560"
           viewBox="0 0 3840 560"
@@ -70,7 +71,7 @@ export default function Footer() {
               </circle>
             </g>
           ))}
-        </svg>
+        </LiveSvg>
 
         <Reveal className="absolute inset-0">
           {/* Offsets shrink on small screens (--kx/--ky) so the pills stay on screen. */}

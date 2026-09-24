@@ -224,10 +224,10 @@
   opacity: 1;
   transform: none;
 }
-/* Animations wait until the section has been scrolled to */
-[data-reveal]:not([data-inview='true']) *,
-[data-reveal]:not([data-inview='true']) *::before,
-[data-reveal]:not([data-inview='true']) *::after {
+/* Animations only run while the section is on screen (and after it has been revealed) */
+[data-reveal]:not([data-inview='true'][data-active='true']) *,
+[data-reveal]:not([data-inview='true'][data-active='true']) *::before,
+[data-reveal]:not([data-inview='true'][data-active='true']) *::after {
   animation-play-state: paused !important;
 }
 
