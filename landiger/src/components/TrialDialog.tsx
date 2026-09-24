@@ -128,13 +128,13 @@ export default function TrialDialog() {
         role="dialog"
         aria-modal="true"
         aria-labelledby={titleId}
-        className="relative max-h-[92vh] w-full animate-rise overflow-y-auto rounded-t-3xl bg-white p-6 shadow-[0_40px_80px_-30px_rgba(11,20,36,0.45)] sm:max-w-[440px] sm:rounded-3xl sm:p-8"
+        className={`relative max-h-[92vh] w-full animate-rise overflow-y-auto rounded-t-3xl bg-white shadow-[0_40px_80px_-30px_rgba(11,20,36,0.45)] sm:max-w-[440px] sm:rounded-3xl ${done ? '' : 'p-6 sm:p-8'}`}
       >
         <button
           type="button"
           onClick={close}
           aria-label="Đóng"
-          className="absolute right-4 top-4 flex size-9 cursor-pointer items-center justify-center rounded-full text-subtle hover:bg-page hover:text-ink"
+          className={`absolute right-4 top-4 z-10 flex size-9 cursor-pointer items-center justify-center rounded-full ${done ? 'text-white/80 hover:bg-white/15 hover:text-white' : 'text-subtle hover:bg-page hover:text-ink'}`}
         >
           <svg width="18" height="18" viewBox="0 0 24 24" fill="none" aria-hidden="true">
             <path d="M6 6l12 12M18 6L6 18" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" />
@@ -142,33 +142,12 @@ export default function TrialDialog() {
         </button>
 
         {done ? (
-          <div className="flex flex-col items-center gap-3 py-6 text-center">
-            <span className="flex size-14 items-center justify-center rounded-full bg-[#E8F7EF]">
-              <svg width="28" height="28" viewBox="0 0 24 24" fill="none" aria-hidden="true">
-                <path
-                  d="M5 12.5l4.5 4.5L19.5 6.5"
-                  stroke="#067647"
-                  strokeWidth="2.6"
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                />
-              </svg>
-            </span>
-            <h2 id={titleId} className="text-xl font-extrabold">
-              Đã tạo workspace dùng thử!
-            </h2>
-            <p className="text-sm leading-relaxed text-muted">
-              Landiger đã gửi hướng dẫn bắt đầu tới <b className="text-ink">{values.email.trim()}</b>. Workspace của{' '}
-              <b className="text-ink">{values.business.trim()}</b> sẵn sàng trong vài phút.
-            </p>
-            <button
-              type="button"
-              onClick={close}
-              className="mt-3 h-11 w-full cursor-pointer rounded-xl bg-brand text-[15px] font-bold text-white hover:bg-[#0040cc]"
-            >
-              Đóng
-            </button>
-          </div>
+          <SuccessView
+            titleId={titleId}
+            email={values.email.trim()}
+            business={values.business.trim()}
+            onClose={close}
+          />
         ) : (
           <form onSubmit={onSubmit} noValidate>
             <div className="flex items-center gap-2.5">
@@ -286,6 +265,128 @@ export default function TrialDialog() {
             </p>
           </form>
         )}
+      </div>
+    </div>
+  );
+}
+
+// "SEN Spa" -> "senspa": used to preview the workspace address.
+const slugify = (v: string) =>
+  v
+    .normalize('NFD')
+    .replace(/[̀-ͯ]/g, '')
+    .replace(/đ/gi, 'd')
+    .toLowerCase()
+    .replace(/[^a-z0-9]/g, '')
+    .slice(0, 24) || 'workspace';
+
+const nextSteps = [
+  ['Mở email xác nhận', 'Kích hoạt tài khoản bằng đường link vừa gửi'],
+  ['Chọn mẫu website theo ngành', 'Sửa chữ và ảnh, xuất bản trong vài phút'],
+  ['Mời nhân viên và bật đặt lịch', 'Khách bắt đầu đặt lịch ngay trên website'],
+];
+
+type SuccessProps = { titleId: string; email: string; business: string; onClose: () => void };
+
+function SuccessView({ titleId, email, business, onClose }: SuccessProps) {
+  return (
+    <div>
+      {/* Brand header */}
+      <div className="relative overflow-hidden bg-gradient-to-br from-[#0095FE] via-brand to-[#0238F0] px-6 pb-12 pt-8 text-center text-white sm:px-8">
+        <div
+          aria-hidden="true"
+          className="absolute inset-0 opacity-25"
+          style={{
+            backgroundImage:
+              'linear-gradient(rgba(255,255,255,.35) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,.35) 1px, transparent 1px)',
+            backgroundSize: '28px 28px',
+            maskImage: 'radial-gradient(ellipse at 50% 30%, #000, transparent 75%)',
+            WebkitMaskImage: 'radial-gradient(ellipse at 50% 30%, #000, transparent 75%)',
+          }}
+        />
+        <div className="relative mx-auto flex size-16 animate-pop items-center justify-center rounded-2xl bg-white shadow-[0_16px_30px_-12px_rgba(0,20,80,0.6)] [animation-delay:0.1s]">
+          <svg width="30" height="30" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+            <path
+              d="M5 12.5l4.5 4.5L19.5 6.5"
+              stroke="#004BEC"
+              strokeWidth="2.8"
+              strokeLinecap="round"
+              strokeLinejoin="round"
+            />
+          </svg>
+        </div>
+        <h2 id={titleId} className="relative mt-4 text-[22px] font-extrabold leading-tight">
+          Chào mừng tới Landiger!
+        </h2>
+        <p className="relative mt-1 text-sm text-white/80">Workspace dùng thử của bạn đã được tạo.</p>
+      </div>
+
+      <div className="px-6 pb-6 sm:px-8 sm:pb-8">
+        {/* Workspace card, overlapping the header */}
+        <div className="relative -mt-7 rounded-2xl border border-[#E3E9F2] bg-white p-4 shadow-[0_18px_34px_-22px_rgba(11,20,36,0.4)]">
+          <div className="flex items-center gap-3">
+            <span className="flex size-10 shrink-0 items-center justify-center rounded-xl bg-tint text-base font-extrabold text-brand">
+              {business.charAt(0).toUpperCase()}
+            </span>
+            <div className="min-w-0 grow">
+              <div className="truncate text-[15px] font-extrabold">{business}</div>
+              <div className="truncate text-xs text-subtle">{slugify(business)}.landiger.com</div>
+            </div>
+            <span className="shrink-0 rounded-full bg-[#E8F7EF] px-2.5 py-1 text-[11px] font-bold text-ok">
+              Dùng thử 14 ngày
+            </span>
+          </div>
+          <div className="mt-3 flex items-center gap-2 rounded-lg bg-page px-3 py-2 text-xs text-muted">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" aria-hidden="true" className="shrink-0">
+              <rect x="3" y="5" width="18" height="14" rx="2" stroke="#6B7488" strokeWidth="2" />
+              <path d="M3.5 6.5l8.5 6 8.5-6" stroke="#6B7488" strokeWidth="2" strokeLinejoin="round" />
+            </svg>
+            <span className="min-w-0 truncate">
+              Đã gửi hướng dẫn tới <b className="text-ink">{email}</b>
+            </span>
+          </div>
+        </div>
+
+        {/* Next steps */}
+        <div className="mt-5 text-[11px] font-bold tracking-[0.12em] text-subtle">BƯỚC TIẾP THEO</div>
+        <ol className="m-0 mt-2.5 flex list-none flex-col gap-2 p-0">
+          {nextSteps.map(([title, desc], i) => (
+            <li
+              key={title}
+              className="flex animate-pop items-start gap-3 px-1 py-1"
+              style={{ animationDelay: `${0.25 + i * 0.08}s` }}
+            >
+              <span
+                className={`mt-0.5 flex size-6 shrink-0 items-center justify-center rounded-full text-xs font-extrabold ${
+                  i === 0 ? 'bg-brand text-white' : 'bg-tint text-brand'
+                }`}
+              >
+                {i + 1}
+              </span>
+              <div>
+                <div className="text-sm font-bold">{title}</div>
+                <div className="text-xs text-subtle">{desc}</div>
+              </div>
+            </li>
+          ))}
+        </ol>
+
+        <div className="mt-6 flex flex-col-reverse gap-2.5 sm:flex-row">
+          <button
+            type="button"
+            onClick={onClose}
+            className="h-12 cursor-pointer rounded-xl border border-line bg-white px-5 text-[15px] font-bold text-ink hover:bg-page"
+          >
+            Để sau
+          </button>
+          <a
+            href="#"
+            onClick={onClose}
+            className="flex h-12 grow items-center justify-center gap-2 rounded-xl bg-brand text-[15px] font-bold text-white hover:bg-[#0040cc] hover:text-white"
+          >
+            Vào workspace <span aria-hidden="true">→</span>
+          </a>
+        </div>
       </div>
     </div>
   );
