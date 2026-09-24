@@ -202,7 +202,7 @@ export default function Industries() {
         <div className="relative mx-auto -mb-20 mt-4 max-w-[1120px] pb-20 lg:mt-5" style={sideFade}>
           <div
             role="tabpanel"
-            className="relative flex flex-col overflow-hidden rounded-[20px] bg-white shadow-[0_40px_80px_-50px_rgba(11,20,36,0.35)] sm:rounded-[28px] lg:h-[440px] lg:flex-row lg:gap-12"
+            className="relative flex flex-col overflow-hidden bg-white shadow-[0_40px_80px_-50px_rgba(11,20,36,0.35)] lg:h-[440px] lg:flex-row lg:gap-12"
           >
             <div
               key={cur.key}
