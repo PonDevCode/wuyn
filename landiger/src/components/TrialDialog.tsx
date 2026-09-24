@@ -6,7 +6,7 @@ import Logo from './Logo';
 /**
  * Free-trial sign-up popup. Any element with a `data-trial` attribute opens it.
  * Fields appear one after another: each one slides in once the previous is valid
- * (email → phone → password → business name).
+ * (email → phone → password → confirm password → business name).
  */
 
 const isEmail = (v: string) => /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(v.trim());
@@ -15,8 +15,8 @@ const isPhone = (v: string) => /^(0|\+84)(3|5|7|8|9)\d{8}$/.test(v.replace(/[\s.
 const isPassword = (v: string) => v.length >= 8;
 const isBusiness = (v: string) => v.trim().length >= 2;
 
-type Values = { email: string; phone: string; password: string; business: string };
-const empty: Values = { email: '', phone: '', password: '', business: '' };
+type Values = { email: string; phone: string; password: string; confirm: string; business: string };
+const empty: Values = { email: '', phone: '', password: '', confirm: '', business: '' };
 
 export default function TrialDialog() {
   const [open, setOpen] = useState(false);
@@ -32,6 +32,7 @@ export default function TrialDialog() {
     email: isEmail(values.email),
     phone: isPhone(values.phone),
     password: isPassword(values.password),
+    confirm: isPassword(values.password) && values.confirm === values.password,
     business: isBusiness(values.business),
   };
   // Each step is revealed once every step before it is valid.
@@ -39,10 +40,11 @@ export default function TrialDialog() {
     email: true,
     phone: valid.email,
     password: valid.email && valid.phone,
-    business: valid.email && valid.phone && valid.password,
+    confirm: valid.email && valid.phone && valid.password,
+    business: valid.email && valid.phone && valid.password && valid.confirm,
   };
-  const complete = valid.email && valid.phone && valid.password && valid.business;
-  const step = [valid.email, valid.phone, valid.password, valid.business].filter(Boolean).length;
+  const complete = valid.email && valid.phone && valid.password && valid.confirm && valid.business;
+  const step = [valid.email, valid.phone, valid.password, valid.confirm, valid.business].filter(Boolean).length;
 
   // Open from any [data-trial] element on the page.
   useEffect(() => {
@@ -110,7 +112,7 @@ export default function TrialDialog() {
   const onSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     if (!complete) {
-      setTouched({ email: true, phone: true, password: true, business: true });
+      setTouched({ email: true, phone: true, password: true, confirm: true, business: true });
       return;
     }
     // TODO: send `values` to the sign-up API once it exists.
@@ -162,7 +164,7 @@ export default function TrialDialog() {
             <p className="mt-1.5 text-sm text-muted">Không cần thẻ thanh toán. Chỉ mất chưa tới một phút.</p>
 
             <div className="mt-5 flex gap-1.5" aria-hidden="true">
-              {[0, 1, 2, 3].map((i) => (
+              {[0, 1, 2, 3, 4].map((i) => (
                 <span
                   key={i}
                   className={`h-1 flex-1 rounded-full transition-colors duration-300 ${i < step ? 'bg-brand' : 'bg-[#E6EBF3]'}`}
@@ -237,6 +239,22 @@ export default function TrialDialog() {
               </Field>
 
               <Field
+                show={shown.confirm}
+                label="Nhập lại mật khẩu"
+                error={touched.confirm && values.confirm && !valid.confirm ? 'Mật khẩu nhập lại chưa khớp' : ''}
+                ok={valid.confirm}
+              >
+                <input
+                  type={showPassword ? 'text' : 'password'}
+                  autoComplete="new-password"
+                  placeholder="••••••••"
+                  value={values.confirm}
+                  onChange={set('confirm')}
+                  onBlur={blur('confirm')}
+                />
+              </Field>
+
+              <Field
                 show={shown.business}
                 label="Tên doanh nghiệp"
                 error={touched.business && values.business && !valid.business ? 'Nhập tên doanh nghiệp' : ''}
@@ -258,7 +276,7 @@ export default function TrialDialog() {
               disabled={!complete}
               className="mt-2 flex h-12 w-full cursor-pointer items-center justify-center gap-2 rounded-xl bg-brand text-[15px] font-bold text-white transition-colors hover:bg-[#0040cc] disabled:cursor-not-allowed disabled:bg-[#C9D6F2]"
             >
-              Tạo workspace miễn phí <span aria-hidden="true">→</span>
+              Tạo Landiger miễn phí <span aria-hidden="true">→</span>
             </button>
             <p className="mt-3 text-center text-xs text-faint">
               Bằng việc đăng ký, bạn đồng ý với Điều khoản sử dụng và Chính sách bảo mật của Landiger.
@@ -318,7 +336,7 @@ function SuccessView({ titleId, email, business, onClose }: SuccessProps) {
         <h2 id={titleId} className="relative mt-4 text-[22px] font-extrabold leading-tight">
           Chào mừng tới Landiger!
         </h2>
-        <p className="relative mt-1 text-sm text-white/80">Workspace dùng thử của bạn đã được tạo.</p>
+        <p className="relative mt-1 text-sm text-white/80">Landiger dùng thử của bạn đã được tạo.</p>
       </div>
 
       <div className="px-6 pb-6 sm:px-8 sm:pb-8">
@@ -384,7 +402,7 @@ function SuccessView({ titleId, email, business, onClose }: SuccessProps) {
             onClick={onClose}
             className="flex h-12 grow items-center justify-center gap-2 rounded-xl bg-brand text-[15px] font-bold text-white hover:bg-[#0040cc] hover:text-white"
           >
-            Vào workspace <span aria-hidden="true">→</span>
+            Vào Landiger <span aria-hidden="true">→</span>
           </a>
         </div>
       </div>
