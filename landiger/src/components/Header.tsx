@@ -4,7 +4,7 @@ import { useEffect, useState } from 'react';
 import Logo from './Logo';
 
 const links = [
-  { href: '#', label: 'Trang chủ' },
+  { href: '#top', label: 'Trang chủ' },
   { href: '#giai-phap', label: 'Giải pháp' },
   { href: '#nganh-nghe', label: 'Ngành nghề' },
   { href: '#bang-gia', label: 'Bảng giá' },
@@ -50,7 +50,7 @@ export default function Header() {
           : 'border-transparent bg-transparent'
       } ${scrolled ? 'animate-slide-down' : ''}`}
     >
-      <a href="#" className="flex items-center gap-2.5 text-xl font-bold tracking-[-0.02em] lg:text-[22px]">
+      <a href="#top" className="flex items-center gap-2.5 text-xl font-bold tracking-[-0.02em] lg:text-[22px]">
         <Logo id="lgBarNav" size={30} />
         Landiger
       </a>
