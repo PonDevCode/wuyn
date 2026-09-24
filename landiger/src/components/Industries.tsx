@@ -137,6 +137,16 @@ const data: Industry[] = [
   },
 ];
 
+// Fades the preview out on all four edges (stronger left/right) so it blends into the page instead of sitting in a frame.
+const edgeFade = {
+  maskImage:
+    'linear-gradient(90deg, transparent, #000 16%, #000 84%, transparent), linear-gradient(180deg, transparent, #000 12%, #000 88%, transparent)',
+  WebkitMaskImage:
+    'linear-gradient(90deg, transparent, #000 16%, #000 84%, transparent), linear-gradient(180deg, transparent, #000 12%, #000 88%, transparent)',
+  maskComposite: 'intersect',
+  WebkitMaskComposite: 'source-in',
+} as const;
+
 function Icon({ d, size, color, width = 2.8 }: { d: string; size: number; color: string; width?: number }) {
   return (
     <svg width={size} height={size} viewBox="0 0 48 48" fill="none" aria-hidden="true">
@@ -194,23 +204,25 @@ export default function Industries() {
 
         <div
           role="tabpanel"
-          className="relative mx-auto mt-4 flex max-w-[1120px] flex-col overflow-hidden rounded-[20px] bg-white shadow-[0_40px_80px_-50px_rgba(11,20,36,0.35)] sm:rounded-[28px] lg:mt-5 lg:h-[440px] lg:flex-row lg:gap-12"
+          className="relative mx-auto mt-4 flex max-w-[1120px] flex-col lg:mt-5 lg:h-[440px] lg:flex-row lg:gap-12"
         >
           <div
             key={cur.key}
-            className="relative h-[300px] shrink-0 animate-rise overflow-hidden [--frame-h:300px] sm:h-[360px] sm:[--frame-h:360px] lg:h-[440px] lg:w-1/2 lg:[--frame-h:440px]"
-            style={{ background: cur.tint }}
+            className="relative h-[300px] shrink-0 animate-rise [--frame-h:300px] sm:h-[360px] sm:[--frame-h:360px] lg:h-[440px] lg:w-1/2 lg:[--frame-h:440px]"
           >
-            {cur.key === 'spa' ? (
-              <Image
-                src={senspa}
-                alt="Website mẫu SEN Spa"
-                sizes="(max-width: 1024px) 100vw, 560px"
-                className="absolute left-0 top-0 block h-auto w-full animate-page-scroll [animation-duration:18s]"
-              />
-            ) : (
+            <div className="absolute inset-0 overflow-hidden" style={{ background: cur.tint, ...edgeFade }}>
+              {cur.key === 'spa' && (
+                <Image
+                  src={senspa}
+                  alt="Website mẫu SEN Spa"
+                  sizes="(max-width: 1024px) 100vw, 560px"
+                  className="absolute left-0 top-0 block h-auto w-full animate-page-scroll [animation-duration:18s]"
+                />
+              )}
+            </div>
+            {cur.key !== 'spa' && (
               <>
-                <div className="absolute inset-x-4 top-4 flex flex-col gap-3 rounded-[18px] bg-white p-4 shadow-[0_24px_40px_-24px_rgba(11,20,36,0.35)] sm:inset-x-10 sm:top-10 sm:p-[18px]">
+                <div className="absolute inset-x-[10%] top-6 flex flex-col gap-3 rounded-[18px] bg-white p-4 shadow-[0_24px_40px_-24px_rgba(11,20,36,0.35)] sm:top-10 sm:p-[18px]">
                   <div className="flex items-center gap-2.5">
                     <div
                       className="flex size-9 items-center justify-center rounded-[10px]"
@@ -230,12 +242,12 @@ export default function Industries() {
                     </div>
                   ))}
                 </div>
-                <div className="absolute bottom-[26px] right-6 flex size-20 -rotate-[8deg] items-center justify-center rounded-3xl bg-gradient-to-br from-sky to-brand shadow-[0_24px_36px_-16px_rgba(0,75,236,0.55)] sm:size-24 sm:rounded-[28px]">
+                <div className="absolute bottom-[26px] right-[10%] flex size-20 -rotate-[8deg] items-center justify-center rounded-3xl bg-gradient-to-br from-sky to-brand shadow-[0_24px_36px_-16px_rgba(0,75,236,0.55)] sm:size-24 sm:rounded-[28px]">
                   <Icon d={cur.icon} size={52} color="#FFFFFF" width={2.6} />
                 </div>
               </>
             )}
-            <div className="absolute bottom-5 left-5 flex h-8 items-center gap-2 rounded-full bg-ink px-3 text-xs font-semibold text-white">
+            <div className="absolute bottom-5 left-[10%] flex h-8 items-center gap-2 rounded-full bg-ink px-3 text-xs font-semibold text-white">
               <span className="size-1.5 rounded-full bg-sky" />
               {cur.chip}
             </div>
@@ -243,7 +255,7 @@ export default function Industries() {
 
           <div
             key={`${cur.key}-text`}
-            className="flex grow animate-rise flex-col justify-center gap-4 p-6 sm:p-8 lg:py-[30px] lg:pl-0 lg:pr-11"
+            className="flex grow animate-rise flex-col justify-center gap-4 px-2 py-6 sm:px-8 lg:py-[30px] lg:pl-0 lg:pr-4"
           >
             <div className="text-xl font-extrabold sm:text-2xl">{cur.title}</div>
             <ul className="m-0 flex list-none flex-col gap-3 p-0">
