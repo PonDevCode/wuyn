@@ -79,7 +79,7 @@ export default function Solution() {
             align="left"
             stacked
             eyebrow="GIẢI PHÁP"
-            title="Một workspace,"
+            title="Một không gian làm việc,"
             accent="bốn việc tự chạy"
             sub="Những việc bạn đang làm tay mỗi ngày, Landiger gom về một chỗ và tự động hóa."
           />

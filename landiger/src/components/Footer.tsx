@@ -224,8 +224,8 @@ export default function Footer() {
           </div>
 
           <div className="absolute inset-x-0 top-[240px] flex flex-col items-center gap-3.5 px-4 text-center sm:top-[256px]">
-            <h2 className="text-[clamp(22px,3.4vw,32px)] font-extrabold uppercase leading-[1.2] text-ink">
-              Dừng ghép 5 phần mềm
+            <h2 className="text-[clamp(22px,3.4vw,32px)] font-extrabold uppercase leading-[1.38] text-ink">
+              Đừng ghép 5 phần mềm
               <br />
               <span className="text-brand">để vận hành một cửa hàng</span>
             </h2>

@@ -34,7 +34,7 @@ export default function SectionHead({
   return (
     <div className={`flex flex-col gap-3 ${alignCls}`}>
       <Eyebrow>{eyebrow}</Eyebrow>
-      <h2 className="text-[clamp(22px,3.2vw,30px)] font-extrabold uppercase leading-[1.2] tracking-[0.01em] text-balance">
+      <h2 className="text-[clamp(22px,3.2vw,30px)] font-extrabold uppercase leading-[1.38] tracking-[0.01em] text-balance">
         <span className={part}>{title}</span> <span className={`${part} text-brand`}>{accent}</span>
       </h2>
       {sub && <p className="max-w-[720px] text-balance text-sm leading-relaxed text-muted sm:text-[15px]">{sub}</p>}

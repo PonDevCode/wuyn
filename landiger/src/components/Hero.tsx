@@ -112,7 +112,7 @@ export default function Hero() {
               <span className="size-[7px] rounded-full bg-sky" />
               WORKSPACE · WEBSITE · BOOKING · CRM
             </div>
-            <h1 className="text-[clamp(28px,8vw,40px)] font-extrabold uppercase leading-[1.12] tracking-[0.005em] md:whitespace-nowrap md:text-[clamp(28px,4.4vw,54px)]">
+            <h1 className="text-[clamp(28px,8vw,40px)] font-extrabold uppercase leading-[1.3] tracking-[0.005em] md:whitespace-nowrap md:text-[clamp(28px,4.4vw,54px)]">
               <span className="block md:inline">Từ website</span>{' '}
               <span className="block text-brand md:inline">đến vận hành</span>
             </h1>
@@ -140,7 +140,7 @@ export default function Hero() {
               <span className="size-[7px] rounded-full bg-sky" />
               WORKSPACE · WEBSITE · BOOKING · CRM
             </div>
-            <h1 className="text-[clamp(30px,4vw,56px)] font-extrabold uppercase leading-[1.16] tracking-[0.005em]">
+            <h1 className="text-[clamp(30px,4vw,56px)] font-extrabold uppercase leading-[1.3] tracking-[0.005em]">
               <span className="block">Từ website</span>
               <span className="block text-brand">đến vận hành</span>
             </h1>
