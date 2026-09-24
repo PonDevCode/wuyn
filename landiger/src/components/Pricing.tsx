@@ -3,7 +3,19 @@
 import { useState } from 'react';
 import SectionHead from './SectionHead';
 
-const plans = [
+type Plan = {
+  name: string;
+  tag: string;
+  who: string;
+  m: string;
+  y: string;
+  inc: string;
+  feat: string[];
+  highlight?: boolean;
+  contact?: boolean;
+};
+
+const plans: Plan[] = [
   {
     name: 'Khởi đầu', tag: '1 chi nhánh', who: 'Cho tiệm mới, 1 người vận hành', m: '[Giá]', y: '[Giá]',
     inc: 'Đủ để bắt đầu nhận khách online',
@@ -24,7 +36,7 @@ const plans = [
 export default function Pricing() {
   const [yearly, setYearly] = useState(false);
 
-  const seg = (on) =>
+  const seg = (on: boolean) =>
     `h-[34px] flex-1 cursor-pointer rounded-lg border-0 text-sm font-semibold focus:outline-none focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-brand ${
       on ? 'bg-white text-brand shadow-[0_1px_3px_rgba(11,20,36,0.12)]' : 'bg-transparent text-subtle'
     }`;

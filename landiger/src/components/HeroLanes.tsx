@@ -1,7 +1,10 @@
+import type { ReactNode } from 'react';
 import Image from 'next/image';
 import senspa from '@/assets/senspa.png';
 
-function Label({ color, children }) {
+type CardKind = 'booking' | 'customer' | 'zalo' | 'payment' | 'revenue' | 'website';
+
+function Label({ color, children }: { color: string; children: ReactNode }) {
   return (
     <div className="flex items-center gap-[7px] text-[10px] font-bold tracking-[0.12em] text-[#6B6F78]">
       <span className="size-[7px] rounded-[2px]" style={{ background: color }} />
@@ -16,7 +19,7 @@ const bookingRows = [
   ['14:30', 'Chị Lan', 'Chờ cọc', '#93370D'],
 ];
 
-const cards = {
+const cards: Record<CardKind, ReactNode> = {
   booking: (
     <>
       <Label color="#0CA678">LỊCH HẸN · THỨ 5</Label>
@@ -107,14 +110,14 @@ const cards = {
   ),
 };
 
-const patterns = {
+const patterns: Record<'A' | 'B' | 'C', CardKind[]> = {
   A: ['booking', 'customer', 'zalo', 'payment', 'revenue'],
   B: ['zalo', 'payment', 'revenue', 'website', 'booking'],
   C: ['revenue', 'website', 'booking', 'customer', 'zalo'],
 };
 
 // [left, duration (s), delay (s), pattern]
-const lanes = [
+const lanes: [number, number, number, keyof typeof patterns][] = [
   [-1120, 46, -28.4, 'C'],
   [-840, 40, -21.3, 'B'],
   [-560, 34, 0, 'A'],
@@ -131,7 +134,7 @@ const lanes = [
 ];
 
 /** Tilted, endlessly scrolling columns of app cards behind the hero headline. */
-export default function HeroLanes({ shift, opacity }) {
+export default function HeroLanes({ shift, opacity }: { shift: number; opacity: number }) {
   return (
     <div
       aria-hidden="true"

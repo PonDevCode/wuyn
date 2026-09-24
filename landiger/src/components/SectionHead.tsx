@@ -1,4 +1,6 @@
-export function Eyebrow({ children, className = '' }) {
+import type { ReactNode } from 'react';
+
+export function Eyebrow({ children, className = '' }: { children: ReactNode; className?: string }) {
   return (
     <div
       className={`inline-flex h-[30px] items-center gap-2 whitespace-nowrap rounded-full border border-line bg-white px-3.5 text-[10px] font-bold tracking-[0.1em] text-muted sm:text-[11px] sm:tracking-[0.16em] ${className}`}
@@ -9,7 +11,23 @@ export function Eyebrow({ children, className = '' }) {
   );
 }
 
-export default function SectionHead({ eyebrow, title, accent, sub, align = 'center', stacked = false }) {
+type SectionHeadProps = {
+  eyebrow: string;
+  title: string;
+  accent: string;
+  sub?: string;
+  align?: 'center' | 'left';
+  stacked?: boolean;
+};
+
+export default function SectionHead({
+  eyebrow,
+  title,
+  accent,
+  sub,
+  align = 'center',
+  stacked = false,
+}: SectionHeadProps) {
   const alignCls = align === 'left' ? 'items-start text-left' : 'items-center text-center';
   const part = stacked ? 'block' : '';
 

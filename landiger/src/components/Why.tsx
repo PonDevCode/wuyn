@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, type ComponentType, type CSSProperties, type ReactNode } from 'react';
 import Logo from './Logo';
 import Scaler from './Scaler';
 import SectionHead from './SectionHead';
@@ -8,7 +8,9 @@ import SectionHead from './SectionHead';
 const shadowNote = 'shadow-[0_14px_24px_-12px_rgba(11,20,36,0.35)]';
 const shadowChip = 'shadow-[0_10px_20px_-12px_rgba(11,20,36,0.35)]';
 
-function Badge({ bg, round, children, count }) {
+type BadgeProps = { bg: string; round?: boolean; count?: string; children: ReactNode };
+
+function Badge({ bg, round, children, count }: BadgeProps) {
   return (
     <span
       className={`relative flex size-[30px] shrink-0 items-center justify-center text-xs font-extrabold text-white ${round ? 'rounded-full' : 'rounded-[7px]'}`}
@@ -25,7 +27,11 @@ function Badge({ bg, round, children, count }) {
 }
 
 // The "before" clutter. Each note has a desktop (1120 wide) and a mobile (400 wide) placement: [left, top, width, rotate].
-const notes = [
+type Placement = [left: number, top: number, width: number, rotate: number];
+type Note = { desk: Placement; mob: Placement; cls: string; body: ReactNode };
+type LayerProps = { mobile?: boolean };
+
+const notes: Note[] = [
   {
     desk: [70, 60, 190, -6], mob: [14, 24, 170, -6],
     cls: `bg-[#FFE58A] ${shadowNote}`,
@@ -115,7 +121,7 @@ const notes = [
   },
 ];
 
-function Before({ mobile }) {
+function Before({ mobile }: LayerProps) {
   return (
     <div className="relative h-[520px]" style={{ width: mobile ? 400 : 1120 }}>
       {!mobile && (
@@ -144,14 +150,16 @@ function Before({ mobile }) {
 }
 
 const hourLabels = ['09:00', '10:00', '11:00', '12:00', '13:00', '14:00', '15:00', '16:00', '17:00'];
-const calEvents = [
+type CalEvent = { top: number; h: number; name: string; svc: string; cls: string; note?: string; inverse?: boolean };
+
+const calEvents: CalEvent[] = [
   { top: 2, h: 62, name: 'Chị Thảo', svc: 'Chăm sóc da', cls: 'bg-tint text-[#0B3AA8]' },
   { top: 178, h: 40, name: 'Anh Minh', svc: 'Gội dưỡng sinh', note: 'Đã dời từ 11:00', cls: 'bg-[#EEF0F4] text-[#2A3348]' },
   { top: 222, h: 62, name: 'Chị Lan', svc: 'Massage body', note: 'Đã cọc 100.000đ', cls: 'bg-brand text-white', inverse: true },
   { top: 310, h: 40, name: 'Chị Hà', svc: 'Liệu trình buổi 3', cls: 'bg-tint text-[#0B3AA8]' },
 ];
 
-function CalendarCard({ style, id }) {
+function CalendarCard({ style, id }: { style: CSSProperties; id: string }) {
   return (
     <div
       className="absolute h-[476px] overflow-hidden rounded-[20px] bg-white px-5 pt-5 shadow-[0_40px_70px_-44px_rgba(11,20,36,0.45)]"
@@ -203,7 +211,7 @@ const stats = [
   ['Website', 'senspa.vn', 'Cập nhật giá 2 phút trước'],
 ];
 
-function After({ mobile }) {
+function After({ mobile }: LayerProps) {
   return (
     <div className="relative h-[520px]" style={{ width: mobile ? 400 : 1120 }}>
       <div
@@ -239,7 +247,7 @@ function After({ mobile }) {
 }
 
 // Desktop and mobile compositions are both rendered; CSS shows the right one (no layout flash on load).
-function Stage({ Layer }) {
+function Stage({ Layer }: { Layer: ComponentType<LayerProps> }) {
   return (
     <>
       <div className="hidden px-4 md:block">

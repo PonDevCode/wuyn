@@ -1,6 +1,6 @@
 # Landiger – Trang chủ (Next.js)
 
-Landing page Landiger chuyển từ bản mockup HTML sang **Next.js 16 (App Router) + Tailwind CSS v4**, responsive cho mobile, tablet và desktop.
+Landing page Landiger chuyển từ bản mockup HTML sang **Next.js 16 (App Router) + TypeScript + Tailwind CSS v4**, responsive cho mobile, tablet và desktop.
 
 ## Chạy dự án
 
@@ -8,6 +8,7 @@ Landing page Landiger chuyển từ bản mockup HTML sang **Next.js 16 (App Rou
 cd landiger
 npm install
 npm run dev      # http://localhost:3000
+npm run typecheck  # kiểm tra kiểu TypeScript
 npm run build && npm start   # bản production
 ```
 
@@ -16,22 +17,22 @@ npm run build && npm start   # bản production
 ```
 src/
   app/
-    layout.js        # font Be Vietnam Pro (next/font), metadata
-    page.js          # ghép các section
+    layout.tsx        # font Be Vietnam Pro (next/font), metadata
+    page.tsx          # ghép các section
     globals.css      # Tailwind + design tokens (@theme) + keyframes
   assets/senspa.png  # ảnh website mẫu SEN Spa
   components/
-    Header.js        # menu, có hamburger trên mobile
-    Hero.js          # 2 slide: cuộn chuột trên desktop hoặc bấm chấm để chuyển
-    HeroLanes.js     # các cột thẻ trượt phía sau tiêu đề
-    HeroDashboard.js # mockup dashboard ở slide 2
-    Marquee.js       # dải ngành nghề chạy ngang
-    Solution.js      # 4 tab tự chuyển + màn hình minh họa (SolutionPanels.js)
-    Industries.js    # tab theo ngành
-    Why.js           # thanh kéo so sánh trước / sau
-    Pricing.js       # bảng giá tháng / năm
-    Footer.js        # CTA cuối trang + footer
-    Scaler.js        # thu nhỏ mockup kích thước cố định cho màn hình hẹp
+    Header.tsx        # menu, có hamburger trên mobile
+    Hero.tsx          # 2 slide: cuộn chuột trên desktop hoặc bấm chấm để chuyển
+    HeroLanes.tsx     # các cột thẻ trượt phía sau tiêu đề
+    HeroDashboard.tsx # mockup dashboard ở slide 2
+    Marquee.tsx       # dải ngành nghề chạy ngang
+    Solution.tsx      # 4 tab tự chuyển + màn hình minh họa (SolutionPanels.tsx)
+    Industries.tsx    # tab theo ngành
+    Why.tsx           # thanh kéo so sánh trước / sau
+    Pricing.tsx       # bảng giá tháng / năm
+    Footer.tsx        # CTA cuối trang + footer
+    Scaler.tsx        # thu nhỏ mockup kích thước cố định cho màn hình hẹp
 ```
 
 ## Responsive

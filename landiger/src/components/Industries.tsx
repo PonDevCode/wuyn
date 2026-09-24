@@ -6,7 +6,20 @@ import senspa from '@/assets/senspa.png';
 import SectionHead from './SectionHead';
 import { icons } from './industries-data';
 
-const data = [
+type Industry = {
+  key: string;
+  tab: string;
+  title: string;
+  tint: string;
+  icon: string;
+  chip: string;
+  bullets: string[];
+  /** Mock schedule shown for non-spa industries */
+  head?: string;
+  rows?: [string, string, string][];
+};
+
+const data: Industry[] = [
   {
     key: 'spa', tab: 'Spa & Beauty', title: 'Lĩnh vực Spa & Beauty', tint: '#FBEFF3', icon: icons.spa,
     chip: 'Website mẫu: SEN Spa',
@@ -44,7 +57,7 @@ const data = [
   },
 ];
 
-function Icon({ d, size, color, width = 2.8 }) {
+function Icon({ d, size, color, width = 2.8 }: { d: string; size: number; color: string; width?: number }) {
   return (
     <svg width={size} height={size} viewBox="0 0 48 48" fill="none" aria-hidden="true">
       <path d={d} stroke={color} strokeWidth={width} strokeLinecap="round" strokeLinejoin="round" />
@@ -126,7 +139,7 @@ export default function Industries() {
                   </div>
                   <span className="text-[15px] font-extrabold">{cur.head}</span>
                 </div>
-                {cur.rows.map(([a, b, c]) => (
+                {cur.rows?.map(([a, b, c]) => (
                   <div key={a} className="flex items-center gap-3 rounded-xl bg-page px-3 py-[11px] text-[13px]">
                     <b className="w-[46px] shrink-0">{a}</b>
                     <span className="min-w-0 grow text-[#2A3348]">{b}</span>

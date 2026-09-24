@@ -1,7 +1,8 @@
+import type { CSSProperties } from 'react';
 import Logo from './Logo';
 
 // Tools that get "absorbed" into the Landiger logo. [label, badge, colour, x, y] — offsets from the logo centre.
-const tools = [
+const tools: [label: string, badge: string, color: string, x: number, y: number][] = [
   ['Excel', 'X', '#1D6F42', -528, -70],
   ['Zalo', 'Z', '#0068FF', -480, 80],
   ['Facebook', 'f', '#1877F2', 480, -80],
@@ -11,7 +12,7 @@ const tools = [
 ];
 
 // Curves converging on the logo, drawn in a 3840-wide canvas centred on the page.
-const flows = [
+const flows: [path: string, duration: number, begin: number][] = [
   ['M1392 90Q1656 155 1920 160', 2.6, 0],
   ['M1440 240Q1680 170 1920 160', 3.05, -0.37],
   ['M2400 80Q2160 150 1920 160', 3.5, -0.74],
@@ -20,13 +21,13 @@ const flows = [
   ['M2560 390Q2240 245 1920 160', 2.6, -1.85],
 ];
 
-const columns = [
+const columns: [title: string, links: string[]][] = [
   ['Sản phẩm', ['Website', 'Đặt lịch hẹn', 'Khách hàng · CRM', 'Marketing tự động']],
   ['Ngành nghề', ['Spa & Beauty', 'Salon tóc', 'Phòng khám', 'Giáo dục']],
   ['Landiger', ['Về chúng tôi', 'Bảng giá', 'Tin tức', 'Liên hệ']],
 ];
 
-const socials = [
+const socials: [label: string, char: string, color: string][] = [
   ['Facebook', 'f', '#1877F2'],
   ['Zalo', 'Z', '#0068FF'],
   ['YouTube', '▶', '#E5484D'],
@@ -88,7 +89,7 @@ export default function Footer() {
                 animationDelay: `${i * 0.08}s`,
                 '--dx': `calc(${-x}px * var(--kx))`,
                 '--dy': `calc(${-y}px * var(--ky))`,
-              }}
+              } as CSSProperties}
             >
               <span
                 className="flex size-6 items-center justify-center rounded-full text-[11px] font-extrabold text-white"

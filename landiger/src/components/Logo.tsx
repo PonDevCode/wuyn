@@ -1,5 +1,12 @@
 // Landiger mark. `id` must be unique per page because the gradient is referenced by id.
-export default function Logo({ id, size = 34, className, pieceClassNames = {} }) {
+type LogoProps = {
+  id: string;
+  size?: number | string;
+  className?: string;
+  pieceClassNames?: { base?: string; bar?: string; tri?: string };
+};
+
+export default function Logo({ id, size = 34, className, pieceClassNames = {} }: LogoProps) {
   return (
     <svg
       width={size}

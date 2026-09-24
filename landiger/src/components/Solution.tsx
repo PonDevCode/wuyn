@@ -6,7 +6,8 @@ import Scaler from './Scaler';
 import SectionHead from './SectionHead';
 import { panels } from './SolutionPanels';
 
-const data = [
+// [number, title, description, preview URL]
+const data: [string, string, string, string][] = [
   ['01', 'Website chuyên nghiệp', 'Chọn mẫu theo ngành, sửa chữ và ảnh rồi xuất bản với tên miền riêng. Không cần biết code.', 'landiger.com / website'],
   ['02', 'Đặt lịch và nhắc hẹn tự động', 'Khách tự chọn dịch vụ và giờ trống. Landiger xếp lịch cho nhân viên và nhắc khách qua Zalo.', 'landiger.com / lịch hẹn'],
   ['03', 'Khách hàng và doanh thu một chỗ', 'Mỗi lượt đặt tự thành hồ sơ khách. Xem lịch sử, chi tiêu và doanh thu theo ngày, tuần, tháng.', 'landiger.com / khách hàng'],
@@ -17,7 +18,7 @@ const INTERVAL = 6000;
 
 export default function Solution() {
   const [active, setActive] = useState(0);
-  const timer = useRef(null);
+  const timer = useRef<ReturnType<typeof setInterval> | undefined>(undefined);
 
   const start = useCallback(() => {
     clearInterval(timer.current);

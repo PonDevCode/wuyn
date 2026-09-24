@@ -9,19 +9,21 @@ const primaryBtn =
   'flex items-center gap-2.5 rounded-xl bg-brand font-bold text-white shadow-btn hover:bg-[#0040cc] hover:text-white';
 const secondaryBtn = 'flex items-center rounded-xl border border-line bg-white font-bold text-ink';
 
+type Slide = 0 | 1;
+
 export default function Hero() {
-  const [slide, setSlide] = useState(0);
+  const [slide, setSlide] = useState<Slide>(0);
   const [shift, setShift] = useState(0);
   const [opacity, setOpacity] = useState(1);
-  const bannerRef = useRef(null);
-  const slideRef = useRef(0);
+  const bannerRef = useRef<HTMLElement>(null);
+  const slideRef = useRef<Slide>(0);
   const lockRef = useRef(0);
-  const timers = useRef([]);
+  const timers = useRef<ReturnType<typeof setTimeout>[]>([]);
 
-  const later = (fn, ms) => timers.current.push(setTimeout(fn, ms));
+  const later = (fn: () => void, ms: number) => timers.current.push(setTimeout(fn, ms));
   const busy = () => Date.now() - lockRef.current < 1100;
 
-  const go = (target) => {
+  const go = (target: Slide) => {
     if (busy() || target === slideRef.current) return;
     lockRef.current = Date.now();
     if (target === 1) {
@@ -57,7 +59,7 @@ export default function Hero() {
     const el = bannerRef.current;
     if (!el) return undefined;
 
-    const onWheel = (e) => {
+    const onWheel = (e: WheelEvent) => {
       if (window.innerWidth < 1024 || Math.abs(e.deltaY) < 4) return;
       const top = el.getBoundingClientRect().top;
       if (top < -40 || top > 140) return;
@@ -184,7 +186,7 @@ export default function Hero() {
         aria-label="Chọn slide"
         className="absolute bottom-4 left-1/2 z-[5] flex -translate-x-1/2 items-center gap-1 rounded-full border border-[#E6E7EB] bg-white/75 px-2 py-1 lg:bottom-auto lg:left-auto lg:right-8 lg:top-1/2 lg:translate-x-0 lg:-translate-y-1/2 lg:flex-col lg:px-1 lg:py-2"
       >
-        {[0, 1].map((i) => (
+        {([0, 1] as const).map((i) => (
           <button
             key={i}
             type="button"

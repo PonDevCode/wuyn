@@ -3,7 +3,17 @@ import senspa from '@/assets/senspa.png';
 
 const soft = 'shadow-card';
 
-const menu = [
+type MenuItem = {
+  label: string;
+  d: string;
+  circle?: boolean;
+  person?: boolean;
+  /** x, y, width, height, radius */
+  rect?: [number, number, number, number, number];
+  badge?: string;
+};
+
+const menu: MenuItem[] = [
   { label: 'Website', d: 'M3 12h18M12 3c3 3 3 15 0 18M12 3c-3 3-3 15 0 18', circle: true },
   { label: 'Lịch hẹn', d: 'M3 10h18M8 3v4M16 3v4', rect: [3, 5, 18, 16, 3], badge: '12' },
   { label: 'Khách hàng', d: 'M2 21a7 7 0 0 1 14 0M16 4a4 4 0 0 1 0 8M22 21a7 7 0 0 0-4-6.3', person: true },
@@ -18,7 +28,7 @@ const appointments = [
   { time: '14:30', init: 'L', bg: '#F6EBD9', fg: '#7A4A0B', name: 'Chị Lan', desc: 'Massage body · từ website', status: 'Đã cọc', isNew: true },
 ];
 
-function MenuIcon({ item }) {
+function MenuIcon({ item }: { item: MenuItem }) {
   return (
     <svg width="14" height="14" viewBox="0 0 24 24" fill="none" aria-hidden="true">
       {item.circle && <circle cx="12" cy="12" r="9" stroke="#4B5059" strokeWidth="2" />}

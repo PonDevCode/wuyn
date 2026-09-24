@@ -28,7 +28,7 @@ function WebsitePanel() {
 const days = ['T2', 'T3', 'T4', 'T5', 'T6', 'T7'];
 const hours = ['9:00', '11:00', '13:00', '15:00', '17:00', '19:00'];
 // [day index, top, height, name, highlighted]
-const events = [
+const events: [day: number, top: number, height: number, name: string, highlighted?: boolean][] = [
   [0, 31, 90, 'Chị Thảo'],
   [0, 175, 90, 'Anh Tú'],
   [1, 79, 42, 'Chị Mai'],
