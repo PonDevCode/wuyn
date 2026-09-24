@@ -33,57 +33,130 @@
   --animate-marquee: marquee 36s linear infinite;
   --animate-page-scroll: page-scroll 16s cubic-bezier(0.45, 0, 0.3, 1) infinite;
   --animate-tool: tool 7s cubic-bezier(0.5, 0, 0.3, 1) infinite both;
+  --animate-slide-down: slide-down 0.35s var(--ease-out-soft) both;
 
+  @keyframes slide-down {
+    from {
+      transform: translateY(-100%);
+    }
+    to {
+      transform: translateY(0);
+    }
+  }
   @keyframes lane {
-    from { transform: translateY(-33.333%); }
-    to { transform: translateY(0); }
+    from {
+      transform: translateY(-33.333%);
+    }
+    to {
+      transform: translateY(0);
+    }
   }
   @keyframes float {
-    0%, 100% { transform: translateY(0); }
-    50% { transform: translateY(-7px); }
+    0%,
+    100% {
+      transform: translateY(0);
+    }
+    50% {
+      transform: translateY(-7px);
+    }
   }
   @keyframes ping-dot {
-    0% { transform: scale(1); opacity: 0.55; }
-    100% { transform: scale(2.6); opacity: 0; }
+    0% {
+      transform: scale(1);
+      opacity: 0.55;
+    }
+    100% {
+      transform: scale(2.6);
+      opacity: 0;
+    }
   }
   @keyframes fade-in {
-    from { opacity: 0; }
-    to { opacity: 1; }
+    from {
+      opacity: 0;
+    }
+    to {
+      opacity: 1;
+    }
   }
   @keyframes rise {
-    from { opacity: 0; transform: translateY(14px) scale(0.985); }
-    to { opacity: 1; transform: none; }
+    from {
+      opacity: 0;
+      transform: translateY(14px) scale(0.985);
+    }
+    to {
+      opacity: 1;
+      transform: none;
+    }
   }
   @keyframes pop {
-    from { opacity: 0; transform: translateY(10px); }
-    to { opacity: 1; transform: none; }
+    from {
+      opacity: 0;
+      transform: translateY(10px);
+    }
+    to {
+      opacity: 1;
+      transform: none;
+    }
   }
   @keyframes fill {
-    from { width: 0; }
-    to { width: 100%; }
+    from {
+      width: 0;
+    }
+    to {
+      width: 100%;
+    }
   }
   @keyframes grow {
-    from { transform: scaleY(0); }
-    to { transform: scaleY(1); }
+    from {
+      transform: scaleY(0);
+    }
+    to {
+      transform: scaleY(1);
+    }
   }
   @keyframes bob {
-    0%, 100% { transform: translateY(0) rotate(var(--r, 0deg)); }
-    50% { transform: translateY(-10px) rotate(var(--r, 0deg)); }
+    0%,
+    100% {
+      transform: translateY(0) rotate(var(--r, 0deg));
+    }
+    50% {
+      transform: translateY(-10px) rotate(var(--r, 0deg));
+    }
   }
   @keyframes marquee {
-    from { transform: translateX(0); }
-    to { transform: translateX(-50%); }
+    from {
+      transform: translateX(0);
+    }
+    to {
+      transform: translateX(-50%);
+    }
   }
   /* Scrolls a tall screenshot inside a frame; the frame sets --frame-h */
   @keyframes page-scroll {
-    0%, 12% { transform: translateY(0); }
-    48%, 62% { transform: translateY(calc(-100% + var(--frame-h, 496px))); }
-    100% { transform: translateY(0); }
+    0%,
+    12% {
+      transform: translateY(0);
+    }
+    48%,
+    62% {
+      transform: translateY(calc(-100% + var(--frame-h, 496px)));
+    }
+    100% {
+      transform: translateY(0);
+    }
   }
   @keyframes tool {
-    0% { opacity: 0; transform: translate(-50%, -50%) scale(0.9); }
-    8%, 55% { opacity: 1; transform: translate(-50%, -50%); }
-    78%, 100% {
+    0% {
+      opacity: 0;
+      transform: translate(-50%, -50%) scale(0.9);
+    }
+    8%,
+    55% {
+      opacity: 1;
+      transform: translate(-50%, -50%);
+    }
+    78%,
+    100% {
       opacity: 0;
       transform: translate(calc(-50% + var(--dx)), calc(-50% + var(--dy))) scale(0.3);
     }
@@ -96,8 +169,7 @@
 }
 
 @utility bg-grid {
-  background-image: linear-gradient(#e6ebf3 1px, transparent 1px),
-    linear-gradient(90deg, #e6ebf3 1px, transparent 1px);
+  background-image: linear-gradient(#e6ebf3 1px, transparent 1px), linear-gradient(90deg, #e6ebf3 1px, transparent 1px);
   background-size: 52px 52px;
 }
 
@@ -127,21 +199,72 @@
   }
 }
 
+/* Scroll reveal (see components/Reveal.tsx) */
+[data-reveal] {
+  opacity: 0;
+  transform: translateY(28px);
+  transition:
+    opacity 0.8s var(--ease-out-soft),
+    transform 0.8s var(--ease-out-soft);
+}
+[data-reveal][data-inview='true'] {
+  opacity: 1;
+  transform: none;
+}
+/* Animations wait until the section has been scrolled to */
+[data-reveal]:not([data-inview='true']) *,
+[data-reveal]:not([data-inview='true']) *::before,
+[data-reveal]:not([data-inview='true']) *::after {
+  animation-play-state: paused !important;
+}
+
 /* Logo assembly in the footer CTA: each piece flies in, holds, then fades */
 @keyframes ft-left {
-  0% { opacity: 0; transform: translate(-420px, -40px) rotate(-12deg) scale(0.8); }
-  18%, 88% { opacity: 1; transform: none; }
-  100% { opacity: 0; transform: none; }
+  0% {
+    opacity: 0;
+    transform: translate(-420px, -40px) rotate(-12deg) scale(0.8);
+  }
+  18%,
+  88% {
+    opacity: 1;
+    transform: none;
+  }
+  100% {
+    opacity: 0;
+    transform: none;
+  }
 }
 @keyframes ft-right {
-  0%, 4% { opacity: 0; transform: translate(420px, -140px) rotate(20deg) scale(0.8); }
-  22%, 88% { opacity: 1; transform: none; }
-  100% { opacity: 0; transform: none; }
+  0%,
+  4% {
+    opacity: 0;
+    transform: translate(420px, -140px) rotate(20deg) scale(0.8);
+  }
+  22%,
+  88% {
+    opacity: 1;
+    transform: none;
+  }
+  100% {
+    opacity: 0;
+    transform: none;
+  }
 }
 @keyframes ft-bottom {
-  0%, 8% { opacity: 0; transform: translate(60px, 380px) rotate(10deg) scale(0.8); }
-  26%, 88% { opacity: 1; transform: none; }
-  100% { opacity: 0; transform: none; }
+  0%,
+  8% {
+    opacity: 0;
+    transform: translate(60px, 380px) rotate(10deg) scale(0.8);
+  }
+  26%,
+  88% {
+    opacity: 1;
+    transform: none;
+  }
+  100% {
+    opacity: 0;
+    transform: none;
+  }
 }
 .ft-p {
   animation-duration: 7s;
@@ -149,11 +272,22 @@
   animation-iteration-count: infinite;
   animation-fill-mode: both;
 }
-.ft-bar { animation-name: ft-left; }
-.ft-tri { animation-name: ft-right; }
-.ft-base { animation-name: ft-bottom; }
+.ft-bar {
+  animation-name: ft-left;
+}
+.ft-tri {
+  animation-name: ft-right;
+}
+.ft-base {
+  animation-name: ft-bottom;
+}
 
 @media (prefers-reduced-motion: reduce) {
+  [data-reveal] {
+    opacity: 1;
+    transform: none;
+  }
+
   html {
     scroll-behavior: auto;
   }

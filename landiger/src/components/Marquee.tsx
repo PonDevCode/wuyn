@@ -1,3 +1,4 @@
+import Reveal from './Reveal';
 import SectionHead from './SectionHead';
 import { icons } from './industries-data';
 
@@ -35,32 +36,34 @@ export default function Marquee() {
         className="pointer-events-none absolute left-1/2 top-10 h-[260px] w-[900px] max-w-full -translate-x-1/2 rounded-full bg-[radial-gradient(closest-side,rgba(0,75,236,0.07),rgba(0,75,236,0))]"
       />
 
-      <div className="relative px-4">
+      <Reveal className="relative px-4">
         <SectionHead eyebrow="MỘT NỀN TẢNG · NHIỀU NGÀNH DỊCH VỤ" title="Ngành nghề" accent="hỗ trợ" />
-      </div>
+      </Reveal>
 
-      <div
-        className="relative w-full max-w-[1200px] overflow-hidden py-2"
-        style={{ maskImage: edgeFade, WebkitMaskImage: edgeFade }}
-      >
-        <ul className="m-0 flex w-max animate-marquee list-none p-0 hover:[animation-play-state:paused]">
-          {[...items, ...items].map((it, i) => (
-            <li key={i} className="shrink-0 pr-3 sm:pr-4" aria-hidden={i >= items.length}>
-              <div className="flex h-16 items-center gap-3 whitespace-nowrap rounded-2xl border border-transparent bg-white pl-3 pr-5 shadow-card transition duration-200 hover:-translate-y-0.5 hover:border-brand hover:shadow-[0_12px_24px_-14px_rgba(0,75,236,0.35)] sm:h-[72px] sm:pl-3.5 sm:pr-[22px]">
-                <div
-                  className="flex size-10 items-center justify-center rounded-xl sm:size-11"
-                  style={{ background: `${it.color}1A` }}
-                >
-                  <svg width="26" height="26" viewBox="0 0 48 48" fill="none" aria-hidden="true">
-                    <path d={it.d} stroke={it.color} strokeWidth="2.8" strokeLinecap="round" strokeLinejoin="round" />
-                  </svg>
+      <Reveal delay={150} className="relative flex w-full justify-center">
+        <div
+          className="relative w-full max-w-[1200px] overflow-hidden py-2"
+          style={{ maskImage: edgeFade, WebkitMaskImage: edgeFade }}
+        >
+          <ul className="m-0 flex w-max animate-marquee list-none p-0 hover:[animation-play-state:paused]">
+            {[...items, ...items].map((it, i) => (
+              <li key={i} className="shrink-0 pr-3 sm:pr-4" aria-hidden={i >= items.length}>
+                <div className="flex h-16 items-center gap-3 whitespace-nowrap rounded-2xl border border-transparent bg-white pl-3 pr-5 shadow-card transition duration-200 hover:-translate-y-0.5 hover:border-brand hover:shadow-[0_12px_24px_-14px_rgba(0,75,236,0.35)] sm:h-[72px] sm:pl-3.5 sm:pr-[22px]">
+                  <div
+                    className="flex size-10 items-center justify-center rounded-xl sm:size-11"
+                    style={{ background: `${it.color}1A` }}
+                  >
+                    <svg width="26" height="26" viewBox="0 0 48 48" fill="none" aria-hidden="true">
+                      <path d={it.d} stroke={it.color} strokeWidth="2.8" strokeLinecap="round" strokeLinejoin="round" />
+                    </svg>
+                  </div>
+                  <div className="text-sm font-semibold text-ink sm:text-[15px]">{it.label}</div>
                 </div>
-                <div className="text-sm font-semibold text-ink sm:text-[15px]">{it.label}</div>
-              </div>
-            </li>
-          ))}
-        </ul>
-      </div>
+              </li>
+            ))}
+          </ul>
+        </div>
+      </Reveal>
     </section>
   );
 }

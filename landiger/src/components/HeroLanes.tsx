@@ -150,10 +150,7 @@ export default function HeroLanes({ shift, opacity }: { shift: number; opacity: 
           const kinds = [...patterns[pattern], ...patterns[pattern], ...patterns[pattern]];
           return (
             <div key={left} className="absolute -top-[700px] w-60" style={{ left }}>
-              <div
-                className="animate-lane"
-                style={{ animationDuration: `${duration}s`, animationDelay: `${delay}s` }}
-              >
+              <div className="animate-lane" style={{ animationDuration: `${duration}s`, animationDelay: `${delay}s` }}>
                 {kinds.map((kind, i) => (
                   <div key={i} className="pb-[26px]">
                     <div className="flex w-60 flex-col gap-2 rounded-2xl bg-white px-4 py-3.5 shadow-[0_14px_28px_-16px_rgba(11,20,36,0.25)]">

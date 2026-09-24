@@ -1,7 +1,9 @@
 'use client';
 
-import { useState, type ComponentType, type CSSProperties, type ReactNode } from 'react';
+import { useEffect, useRef, useState, type ComponentType, type CSSProperties, type ReactNode } from 'react';
+import { useInView } from '@/hooks/useInView';
 import Logo from './Logo';
+import Reveal from './Reveal';
 import Scaler from './Scaler';
 import SectionHead from './SectionHead';
 
@@ -33,7 +35,8 @@ type LayerProps = { mobile?: boolean };
 
 const notes: Note[] = [
   {
-    desk: [70, 60, 190, -6], mob: [14, 24, 170, -6],
+    desk: [70, 60, 190, -6],
+    mob: [14, 24, 170, -6],
     cls: `bg-[#FFE58A] ${shadowNote}`,
     body: (
       <div className="p-3.5 text-sm font-semibold leading-[1.45] text-[#4A3B12]">
@@ -44,7 +47,8 @@ const notes: Note[] = [
     ),
   },
   {
-    desk: [300, 40, 250, 4], mob: [186, 14, 205, 4],
+    desk: [300, 40, 250, 4],
+    mob: [186, 14, 205, 4],
     cls: `bg-white ${shadowChip}`,
     body: (
       <div className="flex items-center gap-2.5 px-3 py-2.5">
@@ -57,27 +61,34 @@ const notes: Note[] = [
     ),
   },
   {
-    desk: [610, 70, 210, -3], mob: [196, 112, 190, -3],
+    desk: [610, 70, 210, -3],
+    mob: [196, 112, 190, -3],
     cls: `bg-white ${shadowChip}`,
     body: (
       <div className="flex items-center gap-2.5 px-3 py-2.5">
-        <Badge bg="#0068FF" round count="23">Z</Badge>
+        <Badge bg="#0068FF" round count="23">
+          Z
+        </Badge>
         <div className="text-xs font-bold text-[#1F2937]">23 tin chưa trả lời</div>
       </div>
     ),
   },
   {
-    desk: [840, 170, 200, 6], mob: [212, 205, 180, 6],
+    desk: [840, 170, 200, 6],
+    mob: [212, 205, 180, 6],
     cls: `bg-white ${shadowChip}`,
     body: (
       <div className="flex items-center gap-2.5 px-3 py-2.5">
-        <Badge bg="#1877F2" round count="12">f</Badge>
+        <Badge bg="#1877F2" round count="12">
+          f
+        </Badge>
         <div className="text-xs font-bold text-[#1F2937]">Khách hỏi giá lúc 23h</div>
       </div>
     ),
   },
   {
-    desk: [120, 230, 230, 3], mob: [18, 168, 190, 3],
+    desk: [120, 230, 230, 3],
+    mob: [18, 168, 190, 3],
     cls: `bg-white ${shadowNote}`,
     body: (
       <div
@@ -85,7 +96,8 @@ const notes: Note[] = [
         style={{ backgroundImage: 'linear-gradient(#E6DCC8 1px, transparent 1px)', backgroundSize: '100% 24px' }}
       >
         <b className="text-[#4A3B12]">Sổ lịch hẹn</b>
-        <br />9h · Thảo · da
+        <br />
+        9h · Thảo · da
         <br />
         <s>11h · Minh</s> → 13h?
         <br />
@@ -94,7 +106,8 @@ const notes: Note[] = [
     ),
   },
   {
-    desk: [430, 270, 220, -5], mob: [22, 330, 180, -5],
+    desk: [430, 270, 220, -5],
+    mob: [22, 330, 180, -5],
     cls: `bg-[#FFE0E0] ${shadowNote}`,
     body: (
       <div className="p-3.5 text-[13px] font-semibold leading-[1.45] text-[#7A1F1F]">
@@ -104,7 +117,8 @@ const notes: Note[] = [
     ),
   },
   {
-    desk: [700, 320, 230, 4], mob: [205, 296, 185, 4],
+    desk: [700, 320, 230, 4],
+    mob: [205, 296, 185, 4],
     cls: `bg-white ${shadowNote}`,
     body: (
       <div className="flex flex-col gap-1.5 px-3.5 py-3">
@@ -115,7 +129,8 @@ const notes: Note[] = [
     ),
   },
   {
-    desk: [900, 40, 150, -8], mob: [236, 392, 150, -8],
+    desk: [900, 40, 150, -8],
+    mob: [236, 392, 150, -8],
     cls: `bg-[#DDF3E6] ${shadowNote}`,
     body: <div className="p-3 text-xs font-semibold leading-[1.45] text-[#1F5135]">Chuyển khoản cọc của ai đây??</div>,
   },
@@ -154,8 +169,23 @@ type CalEvent = { top: number; h: number; name: string; svc: string; cls: string
 
 const calEvents: CalEvent[] = [
   { top: 2, h: 62, name: 'Chị Thảo', svc: 'Chăm sóc da', cls: 'bg-tint text-[#0B3AA8]' },
-  { top: 178, h: 40, name: 'Anh Minh', svc: 'Gội dưỡng sinh', note: 'Đã dời từ 11:00', cls: 'bg-[#EEF0F4] text-[#2A3348]' },
-  { top: 222, h: 62, name: 'Chị Lan', svc: 'Massage body', note: 'Đã cọc 100.000đ', cls: 'bg-brand text-white', inverse: true },
+  {
+    top: 178,
+    h: 40,
+    name: 'Anh Minh',
+    svc: 'Gội dưỡng sinh',
+    note: 'Đã dời từ 11:00',
+    cls: 'bg-[#EEF0F4] text-[#2A3348]',
+  },
+  {
+    top: 222,
+    h: 62,
+    name: 'Chị Lan',
+    svc: 'Massage body',
+    note: 'Đã cọc 100.000đ',
+    cls: 'bg-brand text-white',
+    inverse: true,
+  },
   { top: 310, h: 40, name: 'Chị Hà', svc: 'Liệu trình buổi 3', cls: 'bg-tint text-[#0B3AA8]' },
 ];
 
@@ -205,6 +235,56 @@ function CalendarCard({ style, id }: { style: CSSProperties; id: string }) {
   );
 }
 
+const automations: [time: string, title: string, detail: string, badge: string][] = [
+  ['07:00', 'Gửi 18 tin nhắc lịch qua Zalo', 'Không khách nào quên hẹn', 'Z'],
+  ['08:12', 'Ghép 5 khoản tiền cọc', 'Tự khớp với đúng lịch hẹn', '₫'],
+  ['09:40', 'Thêm 4 khách mới từ website', 'Hồ sơ tự tạo trong CRM', '+'],
+  ['11:05', 'Cập nhật giá lên senspa.vn', 'Sửa một lần, web đổi ngay', 'W'],
+  ['18:00', 'Chốt doanh thu 8.400.000đ', 'Không cần mở Excel', '↗'],
+];
+
+/** Fills the left side of the desktop "after" view: what Landiger did on its own today. */
+function AutomationCard() {
+  return (
+    <div
+      className="absolute flex h-[476px] flex-col rounded-[20px] bg-white p-5 shadow-[0_40px_70px_-44px_rgba(11,20,36,0.45)]"
+      style={{ left: 40, top: 22, width: 440 }}
+    >
+      <div className="flex items-center justify-between">
+        <div>
+          <div className="text-[11px] font-semibold text-faint">Tự động hôm nay</div>
+          <div className="text-lg font-extrabold tracking-[-0.01em]">Landiger đã làm thay bạn</div>
+        </div>
+        <span className="rounded-full bg-[#E8F7EF] px-2.5 py-1 text-[11px] font-bold text-ok">5 việc · 0 lỗi</span>
+      </div>
+      <ul className="m-0 mt-4 flex list-none flex-col gap-2 p-0">
+        {automations.map(([time, title, detail, badge]) => (
+          <li key={time} className="flex items-center gap-3 rounded-xl bg-page px-3 py-2.5">
+            <span className="flex size-8 shrink-0 items-center justify-center rounded-[9px] bg-tint text-[13px] font-extrabold text-brand">
+              {badge}
+            </span>
+            <div className="min-w-0 grow">
+              <div className="truncate text-[13px] font-bold">{title}</div>
+              <div className="text-[11px] text-subtle">{detail}</div>
+            </div>
+            <span className="text-[11px] font-semibold text-faint">{time}</span>
+          </li>
+        ))}
+      </ul>
+      <div className="mt-auto flex items-center justify-between rounded-xl bg-brand px-4 py-3 text-white">
+        <div>
+          <div className="text-[11px] opacity-80">Thời gian bạn tiết kiệm</div>
+          <div className="text-xl font-extrabold">~2 giờ mỗi ngày</div>
+        </div>
+        <svg width="28" height="28" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+          <circle cx="12" cy="12" r="9" stroke="#FFFFFF" strokeWidth="2" />
+          <path d="M12 7v5l3 2" stroke="#FFFFFF" strokeWidth="2" strokeLinecap="round" />
+        </svg>
+      </div>
+    </div>
+  );
+}
+
 const stats = [
   ['Tin nhắn Zalo', '0', 'tin chưa trả lời'],
   ['Thu chi hôm nay', '8.400.000đ', 'Tự cộng từ lịch hẹn'],
@@ -217,8 +297,9 @@ function After({ mobile }: LayerProps) {
       <div
         aria-hidden="true"
         className="absolute rounded-full bg-[radial-gradient(closest-side,rgba(0,75,236,0.12),rgba(0,75,236,0))]"
-        style={mobile ? { left: 0, top: 20, width: 400, height: 480 } : { left: 380, top: 20, width: 700, height: 480 }}
+        style={mobile ? { left: 0, top: 20, width: 400, height: 480 } : { left: 0, top: 20, width: 1120, height: 480 }}
       />
+      {!mobile && <AutomationCard />}
       <CalendarCard
         id={mobile ? 'wyA-m' : 'wyA'}
         style={mobile ? { left: 150, top: 22, width: 236 } : { left: 520, top: 22, width: 340 }}
@@ -234,7 +315,9 @@ function After({ mobile }: LayerProps) {
           }
         >
           <div className="text-[11px] font-semibold text-subtle">{label}</div>
-          <div className={`mt-1.5 font-extrabold tracking-[-0.02em] ${mobile ? 'text-base' : 'text-[26px]'}`}>{value}</div>
+          <div className={`mt-1.5 font-extrabold tracking-[-0.02em] ${mobile ? 'text-base' : 'text-[26px]'}`}>
+            {value}
+          </div>
           <div className="mt-0.5 text-[11px] text-subtle">{sub}</div>
         </div>
       ))}
@@ -265,91 +348,181 @@ function Stage({ Layer }: { Layer: ComponentType<LayerProps> }) {
 }
 
 const features = [
-  ['01', 'Một nơi cho mọi việc', 'Website, lịch hẹn, khách hàng và thanh toán nằm chung một chỗ. Không còn mở năm ứng dụng để trả lời một khách.'],
+  [
+    '01',
+    'Một nơi cho mọi việc',
+    'Website, lịch hẹn, khách hàng và thanh toán nằm chung một chỗ. Không còn mở năm ứng dụng để trả lời một khách.',
+  ],
   ['02', 'Tự động thay bạn', 'Nhắc lịch, ghép tiền cọc, cộng doanh thu. Những việc bạn hay quên, Landiger nhớ giúp.'],
   ['03', 'Dùng được ngay', 'Không cần biết code. Chọn mẫu đúng ngành, sửa vài chữ là có thể nhận khách.'],
 ];
 
+const views: [label: string, pos: number][] = [
+  ['Trước', 96],
+  ['So sánh', 46],
+  ['Sau khi dùng Landiger', 4],
+];
+
+const easeInOut = (t: number) => (t < 0.5 ? 2 * t * t : 1 - (-2 * t + 2) ** 2 / 2);
+
 export default function Why() {
   const [pos, setPos] = useState(46);
+  const posRef = useRef(46);
+  const frame = useRef(0);
+  const [bandRef, inView] = useInView<HTMLDivElement>({ threshold: 0.4 });
+
+  const setBoth = (v: number) => {
+    posRef.current = v;
+    setPos(v);
+  };
+
+  // Tween the handle through the given stops, e.g. [25, 46] for a nudge.
+  const animateTo = (stops: number[], msPerStop = 700) => {
+    cancelAnimationFrame(frame.current);
+    let from = posRef.current;
+    let i = 0;
+    let start = performance.now();
+    const step = (now: number) => {
+      const t = Math.min(1, (now - start) / msPerStop);
+      setBoth(Math.round((from + (stops[i] - from) * easeInOut(t)) * 10) / 10);
+      if (t < 1) {
+        frame.current = requestAnimationFrame(step);
+      } else if (++i < stops.length) {
+        from = stops[i - 1];
+        start = now;
+        frame.current = requestAnimationFrame(step);
+      }
+    };
+    frame.current = requestAnimationFrame(step);
+  };
+
+  // First time the comparison scrolls into view, nudge the handle so visitors see it can be dragged.
+  useEffect(() => {
+    if (!inView || window.matchMedia('(prefers-reduced-motion: reduce)').matches) return undefined;
+    const t = setTimeout(() => animateTo([28, 62, 46], 650), 400);
+    return () => clearTimeout(t);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [inView]);
+
+  useEffect(() => () => cancelAnimationFrame(frame.current), []);
+
+  const nearest = views.reduce((a, b) => (Math.abs(b[1] - pos) < Math.abs(a[1] - pos) ? b : a));
 
   return (
     <section id="tai-sao" className="relative pb-16 pt-14 lg:pb-[70px]">
-      <div className="px-4">
+      <Reveal className="px-4">
         <SectionHead
           eyebrow="VÌ SAO LÀ LANDIGER"
           title="Bớt rối việc,"
           accent="thêm thời gian cho khách"
           sub="Kéo thanh ở giữa để thấy một ngày làm việc thay đổi thế nào khi mọi thứ về một chỗ."
         />
-      </div>
+      </Reveal>
 
-      <div className="relative mt-8 overflow-hidden border-y border-[#E1E7F1] md:mt-10">
-        {/* Before */}
-        <div
-          className="py-2.5"
-          style={{
-            backgroundColor: '#E3E8F0',
-            backgroundImage: 'radial-gradient(#C3CCDA 1px, transparent 1px)',
-            backgroundSize: '18px 18px',
-          }}
-        >
-          <Stage Layer={Before} />
-        </div>
-
-        {/* After, revealed from the handle to the right */}
-        <div
-          className="absolute inset-0 py-2.5"
-          style={{
-            clipPath: `inset(0 0 0 ${pos}%)`,
-            backgroundColor: '#F4F6FA',
-            backgroundImage:
-              'linear-gradient(#E6EBF3 1px, transparent 1px), linear-gradient(90deg, #E6EBF3 1px, transparent 1px)',
-            backgroundSize: '40px 40px',
-          }}
-        >
-          <Stage Layer={After} />
-        </div>
-
-        <div aria-hidden="true" className="pointer-events-none absolute inset-y-0 w-0" style={{ left: `${pos}%` }}>
-          <div className="absolute inset-y-0 -left-px w-0.5 bg-white shadow-[0_0_0_1px_rgba(0,75,236,0.25)]" />
-          <div className="absolute -left-[22px] top-1/2 -mt-[22px] flex size-11 items-center justify-center rounded-full bg-brand shadow-[0_0_0_6px_rgba(255,255,255,0.8),0_14px_26px_-8px_rgba(0,75,236,0.6)] md:-left-[26px] md:-mt-[26px] md:size-[52px]">
-            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#FFFFFF" strokeWidth="2.4" strokeLinecap="round" strokeLinejoin="round">
-              <path d="M9 6l-6 6 6 6M15 6l6 6-6 6" />
-            </svg>
-          </div>
-        </div>
-
-        <label htmlFor="wy-range" className="sr-only">
-          Kéo để so sánh trước và sau khi dùng Landiger
-        </label>
-        <input
-          id="wy-range"
-          type="range"
-          min="4"
-          max="96"
-          step="1"
-          value={pos}
-          onChange={(e) => setPos(Number(e.target.value))}
-          className="absolute inset-0 m-0 size-full cursor-ew-resize opacity-0"
-          style={{ touchAction: 'pan-y' }}
-        />
-      </div>
-
-      <div className="mx-auto mt-8 grid max-w-[1120px] gap-6 px-4 md:grid-cols-3 md:gap-12 md:px-8 lg:px-0">
-        {features.map(([num, title, desc], i) => (
+      <Reveal delay={150}>
+        <div ref={bandRef} className="relative mt-8 overflow-hidden border-y border-[#E1E7F1] md:mt-10">
+          {/* Before */}
           <div
-            key={num}
-            className={`flex flex-col gap-2.5 border-t-2 pt-5 ${i === 0 ? 'border-brand' : 'border-line'}`}
+            className="py-2.5"
+            style={{
+              backgroundColor: '#E3E8F0',
+              backgroundImage: 'radial-gradient(#C3CCDA 1px, transparent 1px)',
+              backgroundSize: '18px 18px',
+            }}
           >
-            <div className="flex items-baseline gap-3">
-              <span className={`text-sm font-extrabold ${i === 0 ? 'text-brand' : 'text-faint'}`}>{num}</span>
-              <span className="text-lg font-extrabold tracking-[-0.01em] sm:text-xl">{title}</span>
-            </div>
-            <div className="text-[15px] leading-relaxed text-muted">{desc}</div>
+            <Stage Layer={Before} />
           </div>
-        ))}
-      </div>
+
+          {/* After, revealed from the handle to the right */}
+          <div
+            className="absolute inset-0 py-2.5"
+            style={{
+              clipPath: `inset(0 0 0 ${pos}%)`,
+              backgroundColor: '#F4F6FA',
+              backgroundImage:
+                'linear-gradient(#E6EBF3 1px, transparent 1px), linear-gradient(90deg, #E6EBF3 1px, transparent 1px)',
+              backgroundSize: '40px 40px',
+            }}
+          >
+            <Stage Layer={After} />
+          </div>
+
+          <div aria-hidden="true" className="pointer-events-none absolute inset-y-0 w-0" style={{ left: `${pos}%` }}>
+            <div className="absolute inset-y-0 -left-px w-0.5 bg-white shadow-[0_0_0_1px_rgba(0,75,236,0.25)]" />
+            <div className="absolute -left-[22px] top-1/2 -mt-[22px] flex size-11 items-center justify-center rounded-full bg-brand shadow-[0_0_0_6px_rgba(255,255,255,0.8),0_14px_26px_-8px_rgba(0,75,236,0.6)] md:-left-[26px] md:-mt-[26px] md:size-[52px]">
+              <svg
+                width="24"
+                height="24"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="#FFFFFF"
+                strokeWidth="2.4"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+              >
+                <path d="M9 6l-6 6 6 6M15 6l6 6-6 6" />
+              </svg>
+            </div>
+          </div>
+
+          <label htmlFor="wy-range" className="sr-only">
+            Kéo để so sánh trước và sau khi dùng Landiger
+          </label>
+          <input
+            id="wy-range"
+            type="range"
+            min="4"
+            max="96"
+            step="any"
+            value={pos}
+            onChange={(e) => {
+              cancelAnimationFrame(frame.current);
+              setBoth(Number(e.target.value));
+            }}
+            className="absolute inset-0 m-0 size-full cursor-ew-resize opacity-0"
+            style={{ touchAction: 'pan-y' }}
+          />
+        </div>
+
+        {/* Quick views: jump the handle instead of dragging */}
+        <div className="mt-5 flex justify-center px-4">
+          <div role="group" aria-label="Chế độ xem" className="flex rounded-xl bg-[#E6ECF6] p-[3px]">
+            {views.map(([label, target]) => {
+              const on = nearest[1] === target;
+              return (
+                <button
+                  key={label}
+                  type="button"
+                  aria-pressed={on}
+                  onClick={() => animateTo([target])}
+                  className={`h-9 cursor-pointer rounded-[9px] border-0 px-3 text-[13px] font-semibold transition-colors focus:outline-none focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-brand sm:px-4 sm:text-sm ${
+                    on ? 'bg-white text-brand shadow-[0_1px_3px_rgba(11,20,36,0.12)]' : 'bg-transparent text-subtle'
+                  }`}
+                >
+                  {label}
+                </button>
+              );
+            })}
+          </div>
+        </div>
+      </Reveal>
+
+      <Reveal className="mx-auto mt-10 max-w-[1120px]">
+        <div className="grid gap-6 px-4 md:grid-cols-3 md:gap-12 md:px-8 lg:px-0">
+          {features.map(([num, title, desc], i) => (
+            <div
+              key={num}
+              className={`flex flex-col gap-2.5 border-t-2 pt-5 ${i === 0 ? 'border-brand' : 'border-line'}`}
+            >
+              <div className="flex items-baseline gap-3">
+                <span className={`text-sm font-extrabold ${i === 0 ? 'text-brand' : 'text-faint'}`}>{num}</span>
+                <span className="text-base font-extrabold tracking-[-0.01em] sm:text-lg">{title}</span>
+              </div>
+              <div className="text-sm leading-relaxed text-muted">{desc}</div>
+            </div>
+          ))}
+        </div>
+      </Reveal>
     </section>
   );
 }

@@ -23,9 +23,34 @@ const menu: MenuItem[] = [
 ];
 
 const appointments = [
-  { time: '09:30', init: 'T', bg: '#F4E3E7', fg: '#9E2A4B', name: 'Chị Thảo', desc: 'Chăm sóc da · KTV Mai', status: 'Đã xác nhận' },
-  { time: '11:00', init: 'M', bg: '#E3EBF7', fg: '#1E4E8C', name: 'Anh Minh', desc: 'Gội dưỡng sinh · KTV Hằng', status: 'Đã xác nhận' },
-  { time: '14:30', init: 'L', bg: '#F6EBD9', fg: '#7A4A0B', name: 'Chị Lan', desc: 'Massage body · từ website', status: 'Đã cọc', isNew: true },
+  {
+    time: '09:30',
+    init: 'T',
+    bg: '#F4E3E7',
+    fg: '#9E2A4B',
+    name: 'Chị Thảo',
+    desc: 'Chăm sóc da · KTV Mai',
+    status: 'Đã xác nhận',
+  },
+  {
+    time: '11:00',
+    init: 'M',
+    bg: '#E3EBF7',
+    fg: '#1E4E8C',
+    name: 'Anh Minh',
+    desc: 'Gội dưỡng sinh · KTV Hằng',
+    status: 'Đã xác nhận',
+  },
+  {
+    time: '14:30',
+    init: 'L',
+    bg: '#F6EBD9',
+    fg: '#7A4A0B',
+    name: 'Chị Lan',
+    desc: 'Massage body · từ website',
+    status: 'Đã cọc',
+    isNew: true,
+  },
 ];
 
 function MenuIcon({ item }: { item: MenuItem }) {
@@ -98,12 +123,23 @@ export default function HeroDashboard() {
               </div>
               <div className="grow text-[11px] font-semibold text-ink">SEN Spa</div>
               <svg width="10" height="10" viewBox="0 0 24 24" fill="none" aria-hidden="true">
-                <path d="M7 9l5-5 5 5M7 15l5 5 5-5" stroke="#6B6F78" strokeWidth="2.4" strokeLinecap="round" strokeLinejoin="round" />
+                <path
+                  d="M7 9l5-5 5 5M7 15l5 5 5-5"
+                  stroke="#6B6F78"
+                  strokeWidth="2.4"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                />
               </svg>
             </div>
             <div className="flex items-center gap-2 rounded-lg bg-ink px-2 py-[7px] font-semibold text-white">
               <svg width="14" height="14" viewBox="0 0 24 24" fill="none" aria-hidden="true">
-                <path d="M4 4h7v7H4zM13 4h7v4h-7zM13 10h7v10h-7zM4 13h7v7H4z" stroke="#FFFFFF" strokeWidth="2" strokeLinejoin="round" />
+                <path
+                  d="M4 4h7v7H4zM13 4h7v4h-7zM13 10h7v10h-7zM4 13h7v7H4z"
+                  stroke="#FFFFFF"
+                  strokeWidth="2"
+                  strokeLinejoin="round"
+                />
               </svg>
               Tổng quan
             </div>
@@ -259,7 +295,9 @@ export default function HeroDashboard() {
         </div>
         <div className="flex gap-1.5 pl-[46px] text-[10px] font-semibold">
           <span className="flex h-[22px] items-center rounded-md bg-[#E8F7EF] px-2 text-ok">✓ Đã gửi nhắc Zalo</span>
-          <span className="flex h-[22px] items-center rounded-md bg-[#F1F2F4] px-2 text-[#4B5059]">Link cọc 100.000đ</span>
+          <span className="flex h-[22px] items-center rounded-md bg-[#F1F2F4] px-2 text-[#4B5059]">
+            Link cọc 100.000đ
+          </span>
         </div>
       </div>
 

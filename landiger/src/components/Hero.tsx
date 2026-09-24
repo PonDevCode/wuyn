@@ -98,7 +98,7 @@ export default function Hero() {
                 'radial-gradient(ellipse min(820px, 95%) 300px at 50% calc(50% - 60px), rgba(244,246,250,0.92) 0%, rgba(244,246,250,0.86) 55%, rgba(244,246,250,0.5) 78%, rgba(244,246,250,0) 100%)',
             }}
           />
-          <div className="absolute inset-x-0 top-0 h-[140px] bg-gradient-to-b from-page to-page/0" />
+          <div className="absolute inset-x-0 top-0 h-[200px] bg-gradient-to-b from-page via-page/90 via-45% to-page/0" />
           <div
             aria-hidden="true"
             className="absolute left-1/2 top-[calc(50%-280px)] h-[440px] w-[min(1100px,100%)] -translate-x-1/2 rounded-[40px] backdrop-blur-[4px]"
@@ -113,11 +113,11 @@ export default function Hero() {
               <span className="size-[7px] rounded-full bg-sky" />
               WORKSPACE · WEBSITE · BOOKING · CRM
             </div>
-            <h1 className="text-[clamp(30px,9vw,48px)] font-extrabold uppercase leading-[1.12] tracking-[0.005em] md:whitespace-nowrap md:text-[clamp(28px,5.6vw,62px)]">
+            <h1 className="text-[clamp(28px,8vw,40px)] font-extrabold uppercase leading-[1.12] tracking-[0.005em] md:whitespace-nowrap md:text-[clamp(28px,4.4vw,54px)]">
               <span className="block md:inline">Từ website</span>{' '}
               <span className="block text-brand md:inline">đến vận hành</span>
             </h1>
-            <p className="max-w-[640px] text-[15px] leading-[1.65] text-[#3F4A5E] sm:text-[17px]">
+            <p className="max-w-[600px] text-[15px] leading-[1.65] text-[#3F4A5E] sm:text-base">
               Khách đến từ website, đặt lịch, vào CRM, được nhắc hẹn và thanh toán — cả hành trình chạy tự động trong
               một workspace Landiger.
             </p>
@@ -134,25 +134,25 @@ export default function Hero() {
       )}
 
       {slide === 1 && (
-        <div className="relative flex animate-fade-in flex-col gap-10 px-4 pb-24 pt-10 sm:px-8 lg:absolute lg:inset-0 lg:grid lg:grid-cols-[minmax(0,600px)_minmax(0,660px)] lg:items-center lg:justify-between lg:gap-10 lg:py-0 lg:pl-[max(32px,calc(50%-600px))] lg:pr-[max(32px,calc(50%-640px))]">
-          <div className="flex flex-col gap-6 lg:gap-7">
+        <div className="relative flex animate-fade-in flex-col gap-10 px-4 pb-24 pt-24 sm:px-8 lg:absolute lg:inset-0 lg:grid lg:grid-cols-[minmax(0,600px)_minmax(0,660px)] lg:items-center lg:justify-between lg:gap-10 lg:py-0 lg:pl-[max(32px,calc(50%-600px))] lg:pr-[max(32px,calc(50%-640px))]">
+          <div className="flex flex-col gap-5 lg:gap-6">
             <div className="flex h-10 items-center gap-2.5 self-start whitespace-nowrap rounded-full border border-[#D9DBE0] bg-white px-[18px] text-[10px] font-semibold tracking-[0.1em] sm:text-xs sm:tracking-[0.14em]">
               <span className="size-[7px] rounded-full bg-sky" />
               WORKSPACE · WEBSITE · BOOKING · CRM
             </div>
-            <h1 className="text-[clamp(34px,5vw,72px)] font-extrabold uppercase leading-[1.16] tracking-[0.005em]">
+            <h1 className="text-[clamp(30px,4vw,56px)] font-extrabold uppercase leading-[1.16] tracking-[0.005em]">
               <span className="block">Từ website</span>
               <span className="block text-brand">đến vận hành</span>
             </h1>
-            <p className="max-w-[540px] text-base leading-[1.65] text-[#3F434B] sm:text-[19px]">
+            <p className="max-w-[520px] text-[15px] leading-[1.65] text-[#3F434B] sm:text-[17px]">
               Landiger là không gian làm việc cho doanh nghiệp dịch vụ: tạo website, nhận đặt lịch, quản lý khách hàng
               và bán hàng — tất cả trên một nền tảng, không cần ghép nhiều phần mềm.
             </p>
             <div className="flex flex-wrap gap-3">
-              <a href="#" className={`${primaryBtn} h-[52px] px-[26px] text-base font-semibold`}>
+              <a href="#" className={`${primaryBtn} h-12 px-6 text-[15px] font-semibold`}>
                 Bắt đầu miễn phí <span aria-hidden="true">→</span>
               </a>
-              <a href="#" className={`${secondaryBtn} h-[52px] border-[#D9DBE0] px-6 text-base font-semibold`}>
+              <a href="#" className={`${secondaryBtn} h-12 border-[#D9DBE0] px-[22px] text-[15px] font-semibold`}>
                 Xem demo
               </a>
             </div>
@@ -163,7 +163,7 @@ export default function Hero() {
                 ['[X]+', 'Doanh nghiệp đang dùng'],
               ].map(([n, l], i) => (
                 <div key={n} className={`flex flex-col gap-1 ${i === 0 ? 'pr-3 sm:pr-8' : 'px-3 sm:px-8'}`}>
-                  <div className="text-xl font-bold sm:text-[28px]">{n}</div>
+                  <div className="text-xl font-bold sm:text-2xl">{n}</div>
                   <div className="text-xs text-[#6B6F78] sm:text-sm">{l}</div>
                 </div>
               ))}
