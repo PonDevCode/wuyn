@@ -1,4 +1,5 @@
 import Image from 'next/image';
+import LiveSvg from './LiveSvg';
 import senspa from '@/assets/senspa.png';
 
 const soft = 'shadow-card';
@@ -80,7 +81,7 @@ const flowPath = 'M217 70H458Q470 70 470 82V121';
 export default function HeroDashboard() {
   return (
     <div className="relative h-[620px] w-[660px]">
-      <svg
+      <LiveSvg
         width="760"
         height="640"
         viewBox="-80 -20 760 640"
@@ -96,7 +97,7 @@ export default function HeroDashboard() {
         <circle r="3.5" fill="#0095FE">
           <animateMotion dur="3s" repeatCount="indefinite" path={flowPath} />
         </circle>
-      </svg>
+      </LiveSvg>
 
       {/* App window */}
       <div className="absolute left-[47px] top-[121px] flex h-[430px] w-[590px] flex-col overflow-hidden rounded-[18px] bg-white shadow-[0_40px_80px_-30px_rgba(11,20,36,0.28),0_2px_6px_rgba(11,20,36,0.04)]">

@@ -2,9 +2,10 @@
 
 import { useEffect, useState } from 'react';
 import Logo from './Logo';
+import Wordmark from './Wordmark';
 
 const links = [
-  { href: '#', label: 'Trang chủ' },
+  { href: '#top', label: 'Trang chủ' },
   { href: '#giai-phap', label: 'Giải pháp' },
   { href: '#nganh-nghe', label: 'Ngành nghề' },
   { href: '#bang-gia', label: 'Bảng giá' },
@@ -46,13 +47,13 @@ export default function Header() {
     <header
       className={`fixed inset-x-0 top-0 z-50 flex h-16 items-center justify-between border-b px-4 transition-[background-color,border-color,box-shadow] duration-300 lg:h-[72px] lg:px-8 xl:px-[max(120px,calc(50%-600px))] ${
         scrolled || open
-          ? 'border-[#E8E9EC] bg-white/95 shadow-[0_8px_24px_-18px_rgba(11,20,36,0.35)] backdrop-blur-md'
+          ? 'border-[#E8E9EC] bg-white shadow-[0_8px_24px_-18px_rgba(11,20,36,0.35)]'
           : 'border-transparent bg-transparent'
       } ${scrolled ? 'animate-slide-down' : ''}`}
     >
-      <a href="#" className="flex items-center gap-2.5 text-xl font-bold tracking-[-0.02em] lg:text-[22px]">
-        <Logo id="lgBarNav" size={30} />
-        Landiger
+      <a href="#top" aria-label="Landiger – Trang chủ" className="flex items-center gap-2.5 lg:gap-3">
+        <Logo id="lgBarNav" size={36} className="size-8 lg:size-10" />
+        <Wordmark className="h-4 w-auto lg:h-[19px]" />
       </a>
 
       <nav aria-label="Điều hướng chính" className="hidden gap-6 text-sm font-medium lg:flex xl:gap-8">
@@ -64,10 +65,7 @@ export default function Header() {
       </nav>
 
       <div className="hidden items-center gap-3 lg:flex">
-        <a href="#" className="flex h-10 items-center px-2.5 text-sm font-semibold xl:px-4">
-          Đăng nhập
-        </a>
-        <a href="#" className={ctaCls}>
+        <a href="#" data-trial className={ctaCls}>
           Dùng thử miễn phí
         </a>
       </div>
@@ -107,16 +105,8 @@ export default function Header() {
             {l.label}
           </a>
         ))}
-        <div className="mt-4 grid grid-cols-2 gap-2.5">
-          <a
-            href="#"
-            onClick={close}
-            tabIndex={tab}
-            className="flex h-11 items-center justify-center rounded-full border border-line text-[15px] font-semibold"
-          >
-            Đăng nhập
-          </a>
-          <a href="#" onClick={close} tabIndex={tab} className={ctaCls}>
+        <div className="mt-4">
+          <a href="#" data-trial onClick={close} tabIndex={tab} className={ctaCls}>
             Dùng thử miễn phí
           </a>
         </div>

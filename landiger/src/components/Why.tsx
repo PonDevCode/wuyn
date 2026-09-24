@@ -497,7 +497,6 @@ export default function Why() {
           </div>
         </div>
       </Reveal>
-
     </section>
   );
 }

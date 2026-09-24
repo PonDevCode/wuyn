@@ -1,6 +1,7 @@
 'use client';
 
 import { useEffect, useRef, useState } from 'react';
+import HeroGrid from './HeroGrid';
 import HeroLanes from './HeroLanes';
 import HeroDashboard from './HeroDashboard';
 import Scaler from './Scaler';
@@ -80,11 +81,8 @@ export default function Hero() {
       ref={bannerRef}
       aria-label="Giới thiệu"
       className={`relative w-full overflow-hidden bg-page lg:h-[760px] ${slide === 0 ? 'h-[600px] sm:h-[700px]' : ''}`}
-      style={{
-        backgroundImage:
-          'repeating-linear-gradient(12.4deg, #E1E7F1 0 1px, transparent 1px 62px), repeating-linear-gradient(121.8deg, #E1E7F1 0 1px, transparent 1px 62px)',
-      }}
     >
+      <HeroGrid />
       {slide === 0 && (
         <div className="absolute inset-0 animate-fade-in">
           {/* 1440px stage centred on the viewport: phones see its middle */}
@@ -99,12 +97,13 @@ export default function Hero() {
             }}
           />
           <div className="absolute inset-x-0 top-0 h-[200px] bg-gradient-to-b from-page via-page/90 via-45% to-page/0" />
+          {/* Solid wash behind the headline (instead of a backdrop blur, which glitches in Chrome) */}
           <div
             aria-hidden="true"
-            className="absolute left-1/2 top-[calc(50%-280px)] h-[440px] w-[min(1100px,100%)] -translate-x-1/2 rounded-[40px] backdrop-blur-[4px]"
+            className="absolute left-1/2 top-[calc(50%-300px)] h-[480px] w-[min(1200px,100%)] -translate-x-1/2"
             style={{
-              maskImage: 'radial-gradient(closest-side, #000 65%, transparent)',
-              WebkitMaskImage: 'radial-gradient(closest-side, #000 65%, transparent)',
+              background:
+                'radial-gradient(closest-side, rgba(244,246,250,0.97) 55%, rgba(244,246,250,0.85) 75%, rgba(244,246,250,0))',
             }}
           />
 
@@ -113,7 +112,7 @@ export default function Hero() {
               <span className="size-[7px] rounded-full bg-sky" />
               WORKSPACE · WEBSITE · BOOKING · CRM
             </div>
-            <h1 className="text-[clamp(28px,8vw,40px)] font-extrabold uppercase leading-[1.12] tracking-[0.005em] md:whitespace-nowrap md:text-[clamp(28px,4.4vw,54px)]">
+            <h1 className="text-[clamp(28px,8vw,40px)] font-extrabold uppercase leading-[1.3] tracking-[0.005em] md:whitespace-nowrap md:text-[clamp(28px,4.4vw,54px)]">
               <span className="block md:inline">Từ website</span>{' '}
               <span className="block text-brand md:inline">đến vận hành</span>
             </h1>
@@ -122,10 +121,10 @@ export default function Hero() {
               một workspace Landiger.
             </p>
             <div className="mt-1.5 flex flex-wrap justify-center gap-3">
-              <a href="#" className={`${primaryBtn} h-[50px] px-6 text-[15px]`}>
+              <a href="#" data-trial className={`${primaryBtn} h-[50px] px-6 text-[15px]`}>
                 Bắt đầu miễn phí <span aria-hidden="true">→</span>
               </a>
-              <a href="#" className={`${secondaryBtn} h-[50px] px-[22px] text-[15px]`}>
+              <a href="#" data-demo className={`${secondaryBtn} h-[50px] px-[22px] text-[15px]`}>
                 Xem demo
               </a>
             </div>
@@ -135,12 +134,13 @@ export default function Hero() {
 
       {slide === 1 && (
         <div className="relative flex animate-fade-in flex-col gap-10 px-4 pb-24 pt-24 sm:px-8 lg:absolute lg:inset-0 lg:grid lg:grid-cols-[minmax(0,600px)_minmax(0,660px)] lg:items-center lg:justify-between lg:gap-10 lg:pb-0 lg:pt-[72px] lg:pl-[max(32px,calc(50%-600px))] lg:pr-[max(32px,calc(50%-640px))]">
-          <div className="flex flex-col gap-5 lg:gap-6">
+          {/* Own compositing layer so the animated grid behind never forces this text to re-raster */}
+          <div className="flex flex-col gap-5 will-change-transform lg:gap-6">
             <div className="flex h-10 items-center gap-2.5 self-start whitespace-nowrap rounded-full border border-[#D9DBE0] bg-white px-[18px] text-[10px] font-semibold tracking-[0.1em] sm:text-xs sm:tracking-[0.14em]">
               <span className="size-[7px] rounded-full bg-sky" />
               WORKSPACE · WEBSITE · BOOKING · CRM
             </div>
-            <h1 className="text-[clamp(30px,4vw,56px)] font-extrabold uppercase leading-[1.16] tracking-[0.005em]">
+            <h1 className="text-[clamp(30px,4vw,56px)] font-extrabold uppercase leading-[1.3] tracking-[0.005em]">
               <span className="block">Từ website</span>
               <span className="block text-brand">đến vận hành</span>
             </h1>
@@ -149,10 +149,10 @@ export default function Hero() {
               và bán hàng — tất cả trên một nền tảng, không cần ghép nhiều phần mềm.
             </p>
             <div className="flex flex-wrap gap-3">
-              <a href="#" className={`${primaryBtn} h-12 px-6 text-[15px] font-semibold`}>
+              <a href="#" data-trial className={`${primaryBtn} h-12 px-6 text-[15px] font-semibold`}>
                 Bắt đầu miễn phí <span aria-hidden="true">→</span>
               </a>
-              <a href="#" className={`${secondaryBtn} h-12 border-[#D9DBE0] px-[22px] text-[15px] font-semibold`}>
+              <a href="#" data-demo className={`${secondaryBtn} h-12 border-[#D9DBE0] px-[22px] text-[15px] font-semibold`}>
                 Xem demo
               </a>
             </div>
