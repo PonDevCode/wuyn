@@ -322,16 +322,32 @@ function SuccessView({ titleId, email, business, onClose }: SuccessProps) {
             WebkitMaskImage: 'radial-gradient(ellipse at 50% 30%, #000, transparent 75%)',
           }}
         />
-        <div className="relative mx-auto flex size-16 animate-pop items-center justify-center rounded-2xl bg-white shadow-[0_16px_30px_-12px_rgba(0,20,80,0.6)] [animation-delay:0.1s]">
-          <svg width="30" height="30" viewBox="0 0 24 24" fill="none" aria-hidden="true">
-            <path
-              d="M5 12.5l4.5 4.5L19.5 6.5"
-              stroke="#004BEC"
-              strokeWidth="2.8"
-              strokeLinecap="round"
-              strokeLinejoin="round"
-            />
-          </svg>
+        {/* Logo tile with a check badge; rings ripple out once when the screen appears */}
+        <div className="relative mx-auto size-[72px]">
+          <span
+            aria-hidden="true"
+            className="absolute inset-0 animate-[ring_1.6s_ease-out_0.2s_both] rounded-[22px] border-2 border-white/60"
+          />
+          <span
+            aria-hidden="true"
+            className="absolute inset-0 animate-[ring_1.6s_ease-out_0.5s_both] rounded-[22px] border-2 border-white/40"
+          />
+          <div className="relative flex size-full animate-pop items-center justify-center rounded-[22px] bg-white shadow-[0_18px_34px_-14px_rgba(0,20,80,0.65)] [animation-delay:0.05s]">
+            <Logo id="welcomeLogo" size={40} />
+          </div>
+          <span className="absolute -bottom-1.5 -right-1.5 flex size-7 animate-pop items-center justify-center rounded-full bg-[#12B76A] shadow-[0_0_0_3px_#FFFFFF] [animation-delay:0.35s]">
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+              <path
+                d="M5 12.5l4.5 4.5L19.5 6.5"
+                pathLength={1}
+                className="animate-[draw_0.45s_ease-out_0.6s_both] [stroke-dasharray:1] [stroke-dashoffset:1]"
+                stroke="#FFFFFF"
+                strokeWidth="3.2"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+              />
+            </svg>
+          </span>
         </div>
         <h2 id={titleId} className="relative mt-4 text-[22px] font-extrabold leading-tight">
           Chào mừng tới Landiger!
