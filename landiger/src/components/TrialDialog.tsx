@@ -30,6 +30,8 @@ export default function TrialDialog() {
   const [view, setView] = useState<'form' | 'pay' | 'done'>('form');
   const [order, setOrder] = useState<{ plan: Plan; cycle: Cycle; amount: number; code: string } | null>(null);
   const done = view === 'done';
+  const changeCycle = (cycle: Cycle) =>
+    setOrder((o) => (o ? { ...o, cycle, amount: priceFor(o.plan, cycle) ?? o.amount } : o));
   const dialogRef = useRef<HTMLDivElement>(null);
   const lastTrigger = useRef<HTMLElement | null>(null);
   const titleId = useId();
@@ -162,7 +164,13 @@ export default function TrialDialog() {
         </button>
 
         {view === 'pay' && order ? (
-          <PayView titleId={titleId} order={order} onBack={() => setView('form')} onPaid={() => setView('done')} />
+          <PayView
+            titleId={titleId}
+            order={order}
+            onCycle={changeCycle}
+            onBack={() => setView('form')}
+            onDone={() => setView('done')}
+          />
         ) : done ? (
           <SuccessView
             titleId={titleId}
@@ -173,11 +181,16 @@ export default function TrialDialog() {
           />
         ) : (
           <form onSubmit={onSubmit} noValidate>
-            <div className="flex items-center gap-2.5">
-              <Logo id="trialLogo" size={24} />
-              <span className="rounded-full bg-tint px-2.5 py-1 text-[11px] font-bold text-brand">
-                {order ? `Gói ${order.plan.name} · ${order.cycle === 'year' ? 'Năm' : 'Tháng'}` : 'Miễn phí 14 ngày'}
-              </span>
+            <div className="flex items-center justify-between gap-2.5 pr-9">
+              <div className="flex items-center gap-2.5">
+                <Logo id="trialLogo" size={24} />
+                {!order && (
+                  <span className="rounded-full bg-tint px-2.5 py-1 text-[11px] font-bold text-brand">
+                    Miễn phí 14 ngày
+                  </span>
+                )}
+              </div>
+              {order && <CycleToggle value={order.cycle} onChange={changeCycle} />}
             </div>
             <h2 id={titleId} className="mt-3 text-lg font-extrabold leading-tight sm:text-xl">
               {order ? `Đăng ký gói ${order.plan.name}` : 'Dùng thử Landiger miễn phí'}
@@ -185,8 +198,10 @@ export default function TrialDialog() {
             <p className="mt-1 text-[13px] text-muted">
               {order ? (
                 <>
-                  <b className="text-ink">{formatVnd(order.amount)}đ</b>/{order.cycle === 'year' ? 'năm' : 'tháng'} ·
-                  Nhập thông tin, rồi quét QR để thanh toán.
+                  <b className="text-ink">{formatVnd(order.amount)}đ</b>/{order.cycle === 'year' ? 'năm' : 'tháng'} ·{' '}
+                  {order.cycle === 'year'
+                    ? 'trả 1 lần cho 12 tháng, đã giảm 20%.'
+                    : 'gia hạn mỗi tháng, huỷ bất cứ lúc nào.'}
                 </>
               ) : (
                 'Không cần thẻ thanh toán, chỉ mất chưa tới một phút.'
@@ -352,22 +367,56 @@ function CopyRow({ label, value, copy, strong }: { label: string; value: string;
   );
 }
 
-/** VietQR transfer screen; moves on to the success screen after PAY_WAIT seconds. */
+/** Billing cycle switch used inside the popup. */
+function CycleToggle({ value, onChange }: { value: Cycle; onChange: (c: Cycle) => void }) {
+  const opt = (c: Cycle, label: ReactNode) => (
+    <button
+      type="button"
+      aria-pressed={value === c}
+      onClick={() => onChange(c)}
+      className={`h-7 cursor-pointer rounded-md px-2.5 text-xs font-semibold ${
+        value === c ? 'bg-white text-brand shadow-[0_1px_3px_rgba(11,20,36,0.12)]' : 'text-subtle hover:text-ink'
+      }`}
+    >
+      {label}
+    </button>
+  );
+  return (
+    <div role="group" aria-label="Chu kỳ thanh toán" className="flex rounded-lg bg-[#E6ECF6] p-0.5">
+      {opt('month', 'Tháng')}
+      {opt(
+        'year',
+        <>
+          Năm <span className="text-ok">-20%</span>
+        </>,
+      )}
+    </div>
+  );
+}
+
+/** What the customer is paying for, in words. */
+const cycleNote = (order: Order) =>
+  order.cycle === 'year'
+    ? 'Thanh toán 1 lần cho 12 tháng, đã giảm 20%.'
+    : `Thanh toán tháng đầu ${formatVnd(order.amount)}đ, gia hạn mỗi tháng.`;
+
+/** VietQR transfer screen. After PAY_WAIT seconds the customer confirms with "Xong". */
 function PayView({
   titleId,
   order,
+  onCycle,
   onBack,
-  onPaid,
+  onDone,
 }: {
   titleId: string;
   order: Order;
+  onCycle: (c: Cycle) => void;
   onBack: () => void;
-  onPaid: () => void;
+  onDone: () => void;
 }) {
   const [svg, setSvg] = useState('');
   const [left, setLeft] = useState(PAY_WAIT);
-  const onPaidRef = useRef(onPaid);
-  onPaidRef.current = onPaid;
+  const ready = left === 0;
 
   useEffect(() => {
     QRCode.toString(vietQrPayload({ amount: order.amount, note: order.code }), {
@@ -383,10 +432,7 @@ function PayView({
     const t = setInterval(() => {
       const remaining = Math.max(0, PAY_WAIT - Math.floor((Date.now() - started) / 1000));
       setLeft(remaining);
-      if (remaining === 0) {
-        clearInterval(t);
-        onPaidRef.current();
-      }
+      if (remaining === 0) clearInterval(t);
     }, 250);
     return () => clearInterval(t);
   }, []);
@@ -396,16 +442,14 @@ function PayView({
 
   return (
     <div>
-      <div className="flex items-center gap-2.5">
+      <div className="flex items-center justify-between gap-2.5 pr-9">
         <Logo id="payLogo" size={24} />
-        <span className="rounded-full bg-tint px-2.5 py-1 text-[11px] font-bold text-brand">
-          Gói {order.plan.name} · {order.cycle === 'year' ? 'Năm' : 'Tháng'}
-        </span>
+        <CycleToggle value={order.cycle} onChange={onCycle} />
       </div>
       <h2 id={titleId} className="mt-3 text-lg font-extrabold leading-tight sm:text-xl">
-        Quét mã để thanh toán
+        Thanh toán gói {order.plan.name}
       </h2>
-      <p className="mt-1 text-[13px] text-muted">Mở app ngân hàng bất kỳ, quét mã VietQR bên dưới.</p>
+      <p className="mt-1 text-[13px] text-muted">{cycleNote(order)}</p>
 
       <div className="mt-3 flex flex-col items-center rounded-2xl border border-[#E3E9F2] bg-page px-4 pb-3 pt-4">
         <div className="relative rounded-xl bg-white p-3 shadow-[0_10px_24px_-16px_rgba(11,20,36,0.4)]">
@@ -420,17 +464,35 @@ function PayView({
           </span>
         </div>
         <div className="mt-2 text-xl font-extrabold tracking-[-0.01em]">{formatVnd(order.amount)}đ</div>
-        <div className="mt-2 flex w-full items-center gap-2.5">
-          <span className="relative flex size-2">
-            <span className="absolute inset-0 animate-ping-dot rounded-full bg-sky" />
-            <span className="relative size-2 rounded-full bg-sky" />
-          </span>
-          <span className="grow text-xs text-muted">Đang chờ thanh toán…</span>
-          <span className="text-xs font-bold tabular-nums text-ink">0:{String(left).padStart(2, '0')}</span>
+        <div className="mt-2 flex w-full items-center gap-2.5" aria-live="polite">
+          {ready ? (
+            <>
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" aria-hidden="true" className="shrink-0">
+                <circle cx="12" cy="12" r="11" fill="#12B76A" />
+                <path
+                  d="M7.5 12.5l3 3L16.5 9"
+                  stroke="#FFFFFF"
+                  strokeWidth="2.4"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                />
+              </svg>
+              <span className="grow text-xs font-semibold text-ok">Đã nhận thông tin chuyển khoản</span>
+            </>
+          ) : (
+            <>
+              <span className="relative flex size-2">
+                <span className="absolute inset-0 animate-ping-dot rounded-full bg-sky" />
+                <span className="relative size-2 rounded-full bg-sky" />
+              </span>
+              <span className="grow text-xs text-muted">Đang chờ thanh toán…</span>
+              <span className="text-xs font-bold tabular-nums text-ink">0:{String(left).padStart(2, '0')}</span>
+            </>
+          )}
         </div>
         <div className="mt-1.5 h-1 w-full overflow-hidden rounded-full bg-[#E6EBF3]">
           <div
-            className="h-full rounded-full bg-brand transition-[width] duration-300"
+            className={`h-full rounded-full transition-[width,background-color] duration-300 ${ready ? 'bg-[#12B76A]' : 'bg-brand'}`}
             style={{ width: `${progress * 100}%` }}
           />
         </div>
@@ -441,19 +503,26 @@ function PayView({
         <CopyRow label="Số tài khoản" value={accountNo} copy={accountNo} />
         <CopyRow label="Chủ tài khoản" value={accountName} />
         <CopyRow label="Số tiền" value={`${formatVnd(order.amount)}đ`} copy={String(order.amount)} />
-        <CopyRow label="Nội dung chuyển khoản" value={order.code} copy={order.code} strong />
+        <CopyRow label="Nội dung CK (giữ nguyên)" value={order.code} copy={order.code} strong />
       </div>
-      <p className="mt-2 text-[11px] leading-snug text-subtle">
-        Vui lòng giữ nguyên nội dung <b className="text-ink">{order.code}</b> để Landiger đối soát và kích hoạt gói.
-      </p>
 
-      <button
-        type="button"
-        onClick={onBack}
-        className="mt-2.5 h-9 w-full cursor-pointer rounded-xl border border-line bg-white text-[13px] font-semibold text-ink hover:bg-page"
-      >
-        ← Sửa thông tin
-      </button>
+      <div className="sticky -bottom-5 -mx-5 mt-3 flex gap-2 border-t border-[#EEF1F6] bg-white px-5 pb-5 pt-3 sm:-bottom-6 sm:-mx-7 sm:px-7 sm:pb-6">
+        <button
+          type="button"
+          onClick={onBack}
+          className="h-10 cursor-pointer rounded-xl border border-line bg-white px-3.5 text-[13px] font-semibold text-ink hover:bg-page"
+        >
+          ← Sửa
+        </button>
+        <button
+          type="button"
+          onClick={onDone}
+          disabled={!ready}
+          className="flex h-10 grow cursor-pointer items-center justify-center gap-2 rounded-xl bg-brand text-sm font-bold text-white transition-colors hover:bg-[#0040cc] disabled:cursor-not-allowed disabled:bg-[#C9D6F2]"
+        >
+          {ready ? 'Xong' : `Đang chờ thanh toán · 0:${String(left).padStart(2, '0')}`}
+        </button>
+      </div>
     </div>
   );
 }
@@ -486,7 +555,7 @@ function SuccessView({ titleId, email, business, order, onClose }: SuccessProps)
   return (
     <div>
       {/* Brand header */}
-      <div className="relative overflow-hidden bg-gradient-to-br from-[#0095FE] via-brand to-[#0238F0] px-6 pb-12 pt-8 text-center text-white sm:px-8">
+      <div className="relative overflow-hidden bg-gradient-to-br from-[#0095FE] via-brand to-[#0238F0] px-6 pb-11 pt-6 text-center text-white sm:px-8">
         <div
           aria-hidden="true"
           className="absolute inset-0 opacity-25"
@@ -535,7 +604,7 @@ function SuccessView({ titleId, email, business, order, onClose }: SuccessProps)
         </p>
       </div>
 
-      <div className="px-6 pb-6 sm:px-8 sm:pb-8">
+      <div className="px-6 pb-5 sm:px-8 sm:pb-6">
         {/* Workspace card, overlapping the header */}
         <div className="relative -mt-7 rounded-2xl border border-[#E3E9F2] bg-white p-4 shadow-[0_18px_34px_-22px_rgba(11,20,36,0.4)]">
           <div className="flex items-center gap-3">
@@ -576,8 +645,8 @@ function SuccessView({ titleId, email, business, order, onClose }: SuccessProps)
         </div>
 
         {/* Next steps */}
-        <div className="mt-5 text-[11px] font-bold tracking-[0.12em] text-subtle">BƯỚC TIẾP THEO</div>
-        <ol className="m-0 mt-2.5 flex list-none flex-col gap-2 p-0">
+        <div className="mt-4 text-[11px] font-bold tracking-[0.12em] text-subtle">BƯỚC TIẾP THEO</div>
+        <ol className="m-0 mt-2 flex list-none flex-col gap-1 p-0">
           {nextSteps.map(([title, desc], i) => (
             <li
               key={title}
@@ -599,7 +668,7 @@ function SuccessView({ titleId, email, business, order, onClose }: SuccessProps)
           ))}
         </ol>
 
-        <div className="mt-6 flex flex-col-reverse gap-2.5 sm:flex-row">
+        <div className="mt-4 flex flex-col-reverse gap-2.5 sm:flex-row">
           <button
             type="button"
             onClick={onClose}
