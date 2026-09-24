@@ -329,11 +329,12 @@ function After({ mobile }: LayerProps) {
   );
 }
 
+// Desktop artwork shrinks on short screens so the slider and its buttons fit in one viewport.
 // Desktop and mobile compositions are both rendered; CSS shows the right one (no layout flash on load).
 function Stage({ Layer }: { Layer: ComponentType<LayerProps> }) {
   return (
     <>
-      <div className="hidden px-4 md:block">
+      <div className="mx-auto hidden max-w-[clamp(640px,calc((100vh-380px)*2.15),960px)] px-4 md:block">
         <Scaler width={1120} height={520}>
           <Layer />
         </Scaler>
@@ -346,16 +347,6 @@ function Stage({ Layer }: { Layer: ComponentType<LayerProps> }) {
     </>
   );
 }
-
-const features = [
-  [
-    '01',
-    'Một nơi cho mọi việc',
-    'Website, lịch hẹn, khách hàng và thanh toán nằm chung một chỗ. Không còn mở năm ứng dụng để trả lời một khách.',
-  ],
-  ['02', 'Tự động thay bạn', 'Nhắc lịch, ghép tiền cọc, cộng doanh thu. Những việc bạn hay quên, Landiger nhớ giúp.'],
-  ['03', 'Dùng được ngay', 'Không cần biết code. Chọn mẫu đúng ngành, sửa vài chữ là có thể nhận khách.'],
-];
 
 const views: [label: string, pos: number][] = [
   ['Trước', 96],
@@ -409,7 +400,7 @@ export default function Why() {
   const nearest = views.reduce((a, b) => (Math.abs(b[1] - pos) < Math.abs(a[1] - pos) ? b : a));
 
   return (
-    <section id="tai-sao" className="relative pb-16 pt-14 lg:pb-[70px]">
+    <section id="tai-sao" className="relative pb-12 pt-10 lg:pb-14 lg:pt-12">
       <Reveal className="px-4">
         <SectionHead
           eyebrow="VÌ SAO LÀ LANDIGER"
@@ -420,7 +411,7 @@ export default function Why() {
       </Reveal>
 
       <Reveal delay={150}>
-        <div ref={bandRef} className="relative mt-8 overflow-hidden border-y border-[#E1E7F1] md:mt-10">
+        <div ref={bandRef} className="relative mt-6 overflow-hidden border-y border-[#E1E7F1] md:mt-8">
           {/* Before */}
           <div
             className="py-2.5"
@@ -485,7 +476,7 @@ export default function Why() {
         </div>
 
         {/* Quick views: jump the handle instead of dragging */}
-        <div className="mt-5 flex justify-center px-4">
+        <div className="mt-4 flex justify-center px-4">
           <div role="group" aria-label="Chế độ xem" className="flex rounded-xl bg-[#E6ECF6] p-[3px]">
             {views.map(([label, target]) => {
               const on = nearest[1] === target;
@@ -507,22 +498,6 @@ export default function Why() {
         </div>
       </Reveal>
 
-      <Reveal className="mx-auto mt-10 max-w-[1120px]">
-        <div className="grid gap-6 px-4 md:grid-cols-3 md:gap-12 md:px-8 lg:px-0">
-          {features.map(([num, title, desc], i) => (
-            <div
-              key={num}
-              className={`flex flex-col gap-2.5 border-t-2 pt-5 ${i === 0 ? 'border-brand' : 'border-line'}`}
-            >
-              <div className="flex items-baseline gap-3">
-                <span className={`text-sm font-extrabold ${i === 0 ? 'text-brand' : 'text-faint'}`}>{num}</span>
-                <span className="text-base font-extrabold tracking-[-0.01em] sm:text-lg">{title}</span>
-              </div>
-              <div className="text-sm leading-relaxed text-muted">{desc}</div>
-            </div>
-          ))}
-        </div>
-      </Reveal>
     </section>
   );
 }
