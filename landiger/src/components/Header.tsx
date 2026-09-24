@@ -65,10 +65,7 @@ export default function Header() {
       </nav>
 
       <div className="hidden items-center gap-3 lg:flex">
-        <a href="#" className="flex h-10 items-center px-2.5 text-sm font-semibold xl:px-4">
-          Đăng nhập
-        </a>
-        <a href="#" className={ctaCls}>
+        <a href="#" data-trial className={ctaCls}>
           Dùng thử miễn phí
         </a>
       </div>
@@ -108,16 +105,8 @@ export default function Header() {
             {l.label}
           </a>
         ))}
-        <div className="mt-4 grid grid-cols-2 gap-2.5">
-          <a
-            href="#"
-            onClick={close}
-            tabIndex={tab}
-            className="flex h-11 items-center justify-center rounded-full border border-line text-[15px] font-semibold"
-          >
-            Đăng nhập
-          </a>
-          <a href="#" onClick={close} tabIndex={tab} className={ctaCls}>
+        <div className="mt-4">
+          <a href="#" data-trial onClick={close} tabIndex={tab} className={ctaCls}>
             Dùng thử miễn phí
           </a>
         </div>

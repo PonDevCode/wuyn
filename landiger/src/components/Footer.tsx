@@ -235,6 +235,7 @@ export default function Footer() {
             <div className="mt-2 flex flex-wrap justify-center gap-3">
               <a
                 href="#"
+                data-trial
                 className="flex h-12 items-center gap-2.5 rounded-xl bg-brand px-6 text-[15px] font-bold text-white shadow-[0_16px_30px_-12px_rgba(0,75,236,0.6)] hover:bg-[#0040cc] hover:text-white"
               >
                 Dùng thử miễn phí <span aria-hidden="true">→</span>

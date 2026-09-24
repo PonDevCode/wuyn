@@ -1,6 +1,7 @@
 import type { Metadata, Viewport } from 'next';
 import { Be_Vietnam_Pro } from 'next/font/google';
 import PlaceholderLinkGuard from '@/components/PlaceholderLinkGuard';
+import TrialDialog from '@/components/TrialDialog';
 import './globals.css';
 
 const beVietnam = Be_Vietnam_Pro({
@@ -27,6 +28,7 @@ export default function RootLayout({ children }: Readonly<{ children: React.Reac
     <html lang="vi" className={beVietnam.variable}>
       <body id="top">
         <PlaceholderLinkGuard />
+        <TrialDialog />
         {children}
       </body>
     </html>

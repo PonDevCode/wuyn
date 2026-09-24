@@ -121,7 +121,7 @@ export default function Hero() {
               một workspace Landiger.
             </p>
             <div className="mt-1.5 flex flex-wrap justify-center gap-3">
-              <a href="#" className={`${primaryBtn} h-[50px] px-6 text-[15px]`}>
+              <a href="#" data-trial className={`${primaryBtn} h-[50px] px-6 text-[15px]`}>
                 Bắt đầu miễn phí <span aria-hidden="true">→</span>
               </a>
               <a href="#" className={`${secondaryBtn} h-[50px] px-[22px] text-[15px]`}>
@@ -149,7 +149,7 @@ export default function Hero() {
               và bán hàng — tất cả trên một nền tảng, không cần ghép nhiều phần mềm.
             </p>
             <div className="flex flex-wrap gap-3">
-              <a href="#" className={`${primaryBtn} h-12 px-6 text-[15px] font-semibold`}>
+              <a href="#" data-trial className={`${primaryBtn} h-12 px-6 text-[15px] font-semibold`}>
                 Bắt đầu miễn phí <span aria-hidden="true">→</span>
               </a>
               <a href="#" className={`${secondaryBtn} h-12 border-[#D9DBE0] px-[22px] text-[15px] font-semibold`}>
