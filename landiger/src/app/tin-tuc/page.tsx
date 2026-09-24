@@ -1,8 +1,9 @@
 import type { Metadata } from 'next';
 import Header from '@/components/Header';
 import Footer from '@/components/Footer';
-import PostCard from '@/components/PostCard';
-import { sortedPosts } from '@/lib/posts';
+import BlogList from '@/components/BlogList';
+import PageHero from '@/components/PageHero';
+import { categories, sortedPosts } from '@/lib/posts';
 import { SITE_NAME, SITE_URL } from '@/lib/site';
 
 const title = 'Tin tức & kiến thức vận hành spa, salon, phòng khám';
@@ -36,20 +37,22 @@ export default function BlogIndex() {
     <>
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }} />
       <Header />
-      <main className="bg-grid px-4 pb-20 pt-28 sm:px-8 lg:px-[max(32px,calc(50%-600px))] lg:pb-28 lg:pt-36">
-        <div className="flex max-w-[720px] flex-col gap-3">
-          <span className="self-start rounded-full bg-white px-3.5 py-1.5 text-xs font-bold tracking-[0.12em] text-brand shadow-[0_1px_2px_rgba(11,20,36,0.06)]">
-            TIN TỨC
-          </span>
-          <h1 className="text-[clamp(28px,4vw,44px)] font-extrabold leading-[1.2] text-ink">
-            Kiến thức vận hành cho doanh nghiệp dịch vụ
-          </h1>
-          <p className="text-[15px] leading-[1.7] text-muted sm:text-base">{description}</p>
-        </div>
-        <div className="mt-10 grid gap-5 sm:grid-cols-2 lg:mt-12 lg:grid-cols-3 lg:gap-6">
-          {posts.map((p) => (
-            <PostCard key={p.slug} post={p} />
-          ))}
+      <main>
+        <PageHero className="px-4 pb-14 pt-32 sm:px-8 lg:pb-20 lg:pt-44">
+          <div className="mx-auto flex max-w-[760px] flex-col items-center gap-5 text-center">
+            <div className="flex h-[34px] items-center gap-[9px] rounded-full bg-white px-4 text-[10px] font-bold tracking-[0.14em] text-[#2A3348] shadow-[0_1px_2px_rgba(11,20,36,0.05),0_10px_22px_-14px_rgba(11,20,36,0.25)] sm:text-xs">
+              <span className="size-[7px] rounded-full bg-sky" />
+              TIN TỨC · KIẾN THỨC · KINH NGHIỆM
+            </div>
+            <h1 className="text-[clamp(28px,5vw,52px)] font-extrabold uppercase leading-[1.25]">
+              <span className="block">Kiến thức</span>
+              <span className="block text-brand">vận hành cửa hàng</span>
+            </h1>
+            <p className="max-w-[600px] text-[15px] leading-[1.7] text-[#3F4A5E] sm:text-base">{description}</p>
+          </div>
+        </PageHero>
+        <div className="px-4 pb-20 sm:px-8 lg:px-[max(32px,calc(50%-600px))] lg:pb-28">
+          <BlogList posts={posts} categories={categories} />
         </div>
       </main>
       <Footer />

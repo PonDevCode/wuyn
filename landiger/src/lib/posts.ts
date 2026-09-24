@@ -197,3 +197,18 @@ export function readingMinutes(post: Post) {
   const text = post.body.map((b) => ('text' in b ? b.text : b.items.join(' '))).join(' ');
   return Math.max(1, Math.round(text.split(/\s+/).length / 220));
 }
+
+/** URL-safe anchor for a heading: "Tỷ lệ lấp đầy lịch" → "ty-le-lap-day-lich". */
+export const anchor = (text: string) =>
+  text
+    .normalize('NFD')
+    .replace(/[̀-ͯ]/g, '')
+    .replace(/đ/gi, 'd')
+    .toLowerCase()
+    .replace(/[^a-z0-9]+/g, '-')
+    .replace(/^-|-$/g, '');
+
+export const headings = (post: Post) =>
+  post.body.flatMap((b) => (b.type === 'h2' ? [{ id: anchor(b.text), text: b.text }] : []));
+
+export const categories = [...new Set(posts.map((p) => p.category))];
