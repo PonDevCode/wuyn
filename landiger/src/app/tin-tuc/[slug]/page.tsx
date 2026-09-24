@@ -196,7 +196,7 @@ export default async function PostPage({ params }: Props) {
           </section>
         )}
       </main>
-      <Footer />
+      <Footer fadeTop />
     </>
   );
 }

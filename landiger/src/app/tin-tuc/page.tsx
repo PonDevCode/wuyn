@@ -55,7 +55,7 @@ export default function BlogIndex() {
           <BlogList posts={posts} categories={categories} />
         </div>
       </main>
-      <Footer />
+      <Footer fadeTop />
     </>
   );
 }
