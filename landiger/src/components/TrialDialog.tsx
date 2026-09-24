@@ -1,10 +1,14 @@
 'use client';
 
 import { cloneElement, useEffect, useId, useRef, useState, type ReactElement, type ReactNode } from 'react';
+import QRCode from 'qrcode';
+import { findPlan, formatVnd, priceFor, type Cycle, type Plan } from '@/lib/plans';
+import { newPaymentCode, PAYMENT_ACCOUNT, vietQrPayload } from '@/lib/payment';
 import Logo from './Logo';
 
 /**
- * Free-trial sign-up popup. Any element with a `data-trial` attribute opens it.
+ * Sign-up popup. Any element with a `data-trial` attribute opens it: as a free trial, or, with
+ * `data-plan` (+ `data-cycle`), as a paid sign-up that ends with a VietQR transfer.
  * Fields appear one after another: each one slides in once the previous is valid
  * (email → phone → password → confirm password → business name).
  */
@@ -23,7 +27,9 @@ export default function TrialDialog() {
   const [values, setValues] = useState<Values>(empty);
   const [touched, setTouched] = useState<Partial<Record<keyof Values, boolean>>>({});
   const [showPassword, setShowPassword] = useState(false);
-  const [done, setDone] = useState(false);
+  const [view, setView] = useState<'form' | 'pay' | 'done'>('form');
+  const [order, setOrder] = useState<{ plan: Plan; cycle: Cycle; amount: number; code: string } | null>(null);
+  const done = view === 'done';
   const dialogRef = useRef<HTMLDivElement>(null);
   const lastTrigger = useRef<HTMLElement | null>(null);
   const titleId = useId();
@@ -52,7 +58,14 @@ export default function TrialDialog() {
       const trigger = (e.target as Element | null)?.closest?.('[data-trial]');
       if (!trigger) return;
       e.preventDefault();
-      lastTrigger.current = trigger as HTMLElement;
+      const el = trigger as HTMLElement;
+      lastTrigger.current = el;
+      const plan = findPlan(el.dataset.plan);
+      const cycle: Cycle = el.dataset.cycle === 'year' ? 'year' : 'month';
+      const amount = plan ? priceFor(plan, cycle) : null;
+      // Start a fresh form unless the visitor is coming back to one they were filling in.
+      setView((v) => (v === 'form' ? v : 'form'));
+      setOrder(plan && amount !== null ? { plan, cycle, amount, code: '' } : null);
       setOpen(true);
     };
     document.addEventListener('click', onClick);
@@ -61,10 +74,10 @@ export default function TrialDialog() {
 
   const close = () => {
     setOpen(false);
-    if (done) {
+    if (view !== 'form') {
       setValues(empty);
       setTouched({});
-      setDone(false);
+      setView('form');
     }
     lastTrigger.current?.focus();
   };
@@ -115,8 +128,13 @@ export default function TrialDialog() {
       setTouched({ email: true, phone: true, password: true, confirm: true, business: true });
       return;
     }
-    // TODO: send `values` to the sign-up API once it exists.
-    setDone(true);
+    // TODO: send `values` (and `order`) to the sign-up API once it exists.
+    if (order) {
+      setOrder({ ...order, code: newPaymentCode() });
+      setView('pay');
+    } else {
+      setView('done');
+    }
   };
 
   if (!open) return null;
@@ -143,11 +161,14 @@ export default function TrialDialog() {
           </svg>
         </button>
 
-        {done ? (
+        {view === 'pay' && order ? (
+          <PayView titleId={titleId} order={order} onBack={() => setView('form')} onPaid={() => setView('done')} />
+        ) : done ? (
           <SuccessView
             titleId={titleId}
             email={values.email.trim()}
             business={values.business.trim()}
+            order={order}
             onClose={close}
           />
         ) : (
@@ -155,13 +176,22 @@ export default function TrialDialog() {
             <div className="flex items-center gap-2.5">
               <Logo id="trialLogo" size={24} />
               <span className="rounded-full bg-tint px-2.5 py-1 text-[11px] font-bold text-brand">
-                Miễn phí 14 ngày
+                {order ? `Gói ${order.plan.name} · ${order.cycle === 'year' ? 'Năm' : 'Tháng'}` : 'Miễn phí 14 ngày'}
               </span>
             </div>
             <h2 id={titleId} className="mt-3 text-lg font-extrabold leading-tight sm:text-xl">
-              Dùng thử Landiger miễn phí
+              {order ? `Đăng ký gói ${order.plan.name}` : 'Dùng thử Landiger miễn phí'}
             </h2>
-            <p className="mt-1 text-[13px] text-muted">Không cần thẻ thanh toán, chỉ mất chưa tới một phút.</p>
+            <p className="mt-1 text-[13px] text-muted">
+              {order ? (
+                <>
+                  <b className="text-ink">{formatVnd(order.amount)}đ</b>/{order.cycle === 'year' ? 'năm' : 'tháng'} ·
+                  Nhập thông tin, rồi quét QR để thanh toán.
+                </>
+              ) : (
+                'Không cần thẻ thanh toán, chỉ mất chưa tới một phút.'
+              )}
+            </p>
 
             <div className="mt-4 flex gap-1.5" aria-hidden="true">
               {[0, 1, 2, 3, 4].map((i) => (
@@ -276,7 +306,7 @@ export default function TrialDialog() {
               disabled={!complete}
               className="mt-1 flex h-11 w-full cursor-pointer items-center justify-center gap-2 rounded-xl bg-brand text-sm font-bold text-white transition-colors hover:bg-[#0040cc] disabled:cursor-not-allowed disabled:bg-[#C9D6F2]"
             >
-              Tạo Landiger miễn phí <span aria-hidden="true">→</span>
+              {order ? 'Tiếp tục thanh toán' : 'Tạo Landiger miễn phí'} <span aria-hidden="true">→</span>
             </button>
             <p className="mt-2.5 text-center text-[11px] leading-snug text-faint">
               Bằng việc đăng ký, bạn đồng ý với Điều khoản sử dụng và Chính sách bảo mật của Landiger.
@@ -288,11 +318,151 @@ export default function TrialDialog() {
   );
 }
 
+const PAY_WAIT = 30; // seconds before the success screen
+
+type Order = { plan: Plan; cycle: Cycle; amount: number; code: string };
+
+function CopyRow({ label, value, copy, strong }: { label: string; value: string; copy?: string; strong?: boolean }) {
+  const [copied, setCopied] = useState(false);
+  return (
+    <div className="flex items-center justify-between gap-3 py-1.5">
+      <span className="shrink-0 text-xs text-subtle">{label}</span>
+      <span className="flex min-w-0 items-center gap-1.5">
+        <span
+          className={`truncate text-right text-[13px] ${strong ? 'font-extrabold text-brand' : 'font-semibold text-ink'}`}
+        >
+          {value}
+        </span>
+        {copy && (
+          <button
+            type="button"
+            onClick={() => {
+              navigator.clipboard?.writeText(copy).then(() => {
+                setCopied(true);
+                setTimeout(() => setCopied(false), 1500);
+              });
+            }}
+            className="shrink-0 cursor-pointer rounded-md px-1.5 py-0.5 text-[11px] font-semibold text-brand hover:bg-tint"
+          >
+            {copied ? 'Đã chép' : 'Sao chép'}
+          </button>
+        )}
+      </span>
+    </div>
+  );
+}
+
+/** VietQR transfer screen; moves on to the success screen after PAY_WAIT seconds. */
+function PayView({
+  titleId,
+  order,
+  onBack,
+  onPaid,
+}: {
+  titleId: string;
+  order: Order;
+  onBack: () => void;
+  onPaid: () => void;
+}) {
+  const [svg, setSvg] = useState('');
+  const [left, setLeft] = useState(PAY_WAIT);
+  const onPaidRef = useRef(onPaid);
+  onPaidRef.current = onPaid;
+
+  useEffect(() => {
+    QRCode.toString(vietQrPayload({ amount: order.amount, note: order.code }), {
+      type: 'svg',
+      margin: 0,
+      errorCorrectionLevel: 'M',
+      color: { dark: '#0B1424', light: '#FFFFFF' },
+    }).then(setSvg);
+  }, [order.amount, order.code]);
+
+  useEffect(() => {
+    const started = Date.now();
+    const t = setInterval(() => {
+      const remaining = Math.max(0, PAY_WAIT - Math.floor((Date.now() - started) / 1000));
+      setLeft(remaining);
+      if (remaining === 0) {
+        clearInterval(t);
+        onPaidRef.current();
+      }
+    }, 250);
+    return () => clearInterval(t);
+  }, []);
+
+  const { bankName, accountNo, accountName } = PAYMENT_ACCOUNT;
+  const progress = (PAY_WAIT - left) / PAY_WAIT;
+
+  return (
+    <div>
+      <div className="flex items-center gap-2.5">
+        <Logo id="payLogo" size={24} />
+        <span className="rounded-full bg-tint px-2.5 py-1 text-[11px] font-bold text-brand">
+          Gói {order.plan.name} · {order.cycle === 'year' ? 'Năm' : 'Tháng'}
+        </span>
+      </div>
+      <h2 id={titleId} className="mt-3 text-lg font-extrabold leading-tight sm:text-xl">
+        Quét mã để thanh toán
+      </h2>
+      <p className="mt-1 text-[13px] text-muted">Mở app ngân hàng bất kỳ, quét mã VietQR bên dưới.</p>
+
+      <div className="mt-3 flex flex-col items-center rounded-2xl border border-[#E3E9F2] bg-page px-4 pb-3 pt-4">
+        <div className="relative rounded-xl bg-white p-3 shadow-[0_10px_24px_-16px_rgba(11,20,36,0.4)]">
+          <div
+            className="size-[128px] [&>svg]:size-full"
+            aria-label={`Mã QR chuyển khoản ${formatVnd(order.amount)} đồng, nội dung ${order.code}`}
+            role="img"
+            dangerouslySetInnerHTML={{ __html: svg }}
+          />
+          <span className="absolute left-1/2 top-1/2 flex size-9 -translate-x-1/2 -translate-y-1/2 items-center justify-center rounded-lg bg-white shadow-[0_0_0_3px_#FFFFFF]">
+            <Logo id="qrLogo" size={22} />
+          </span>
+        </div>
+        <div className="mt-2 text-xl font-extrabold tracking-[-0.01em]">{formatVnd(order.amount)}đ</div>
+        <div className="mt-2 flex w-full items-center gap-2.5">
+          <span className="relative flex size-2">
+            <span className="absolute inset-0 animate-ping-dot rounded-full bg-sky" />
+            <span className="relative size-2 rounded-full bg-sky" />
+          </span>
+          <span className="grow text-xs text-muted">Đang chờ thanh toán…</span>
+          <span className="text-xs font-bold tabular-nums text-ink">0:{String(left).padStart(2, '0')}</span>
+        </div>
+        <div className="mt-1.5 h-1 w-full overflow-hidden rounded-full bg-[#E6EBF3]">
+          <div
+            className="h-full rounded-full bg-brand transition-[width] duration-300"
+            style={{ width: `${progress * 100}%` }}
+          />
+        </div>
+      </div>
+
+      <div className="mt-2.5 divide-y divide-[#EEF1F6] rounded-xl border border-[#E3E9F2] px-3.5">
+        <CopyRow label="Ngân hàng" value={bankName} />
+        <CopyRow label="Số tài khoản" value={accountNo} copy={accountNo} />
+        <CopyRow label="Chủ tài khoản" value={accountName} />
+        <CopyRow label="Số tiền" value={`${formatVnd(order.amount)}đ`} copy={String(order.amount)} />
+        <CopyRow label="Nội dung chuyển khoản" value={order.code} copy={order.code} strong />
+      </div>
+      <p className="mt-2 text-[11px] leading-snug text-subtle">
+        Vui lòng giữ nguyên nội dung <b className="text-ink">{order.code}</b> để Landiger đối soát và kích hoạt gói.
+      </p>
+
+      <button
+        type="button"
+        onClick={onBack}
+        className="mt-2.5 h-9 w-full cursor-pointer rounded-xl border border-line bg-white text-[13px] font-semibold text-ink hover:bg-page"
+      >
+        ← Sửa thông tin
+      </button>
+    </div>
+  );
+}
+
 // "SEN Spa" -> "senspa": used to preview the workspace address.
 const slugify = (v: string) =>
   v
     .normalize('NFD')
-    .replace(/[̀-ͯ]/g, '')
+    .replace(/[\u0300-\u036f]/g, '')
     .replace(/đ/gi, 'd')
     .toLowerCase()
     .replace(/[^a-z0-9]/g, '')
@@ -304,9 +474,15 @@ const nextSteps = [
   ['Mời nhân viên và bật đặt lịch', 'Khách bắt đầu đặt lịch ngay trên website'],
 ];
 
-type SuccessProps = { titleId: string; email: string; business: string; onClose: () => void };
+type SuccessProps = {
+  titleId: string;
+  email: string;
+  business: string;
+  order: { plan: Plan; cycle: Cycle; amount: number; code: string } | null;
+  onClose: () => void;
+};
 
-function SuccessView({ titleId, email, business, onClose }: SuccessProps) {
+function SuccessView({ titleId, email, business, order, onClose }: SuccessProps) {
   return (
     <div>
       {/* Brand header */}
@@ -350,9 +526,13 @@ function SuccessView({ titleId, email, business, onClose }: SuccessProps) {
           </span>
         </div>
         <h2 id={titleId} className="relative mt-4 text-[22px] font-extrabold leading-tight">
-          Chào mừng tới Landiger!
+          {order ? 'Đăng ký thành công!' : 'Chào mừng tới Landiger!'}
         </h2>
-        <p className="relative mt-1 text-sm text-white/80">Landiger dùng thử của bạn đã được tạo.</p>
+        <p className="relative mt-1 text-sm text-white/80">
+          {order
+            ? `Gói ${order.plan.name} sẽ kích hoạt ngay khi đối soát xong.`
+            : 'Landiger dùng thử của bạn đã được tạo.'}
+        </p>
       </div>
 
       <div className="px-6 pb-6 sm:px-8 sm:pb-8">
@@ -367,7 +547,7 @@ function SuccessView({ titleId, email, business, onClose }: SuccessProps) {
               <div className="truncate text-xs text-subtle">{slugify(business)}.landiger.com</div>
             </div>
             <span className="shrink-0 rounded-full bg-[#E8F7EF] px-2.5 py-1 text-[11px] font-bold text-ok">
-              Dùng thử 14 ngày
+              {order ? `Gói ${order.plan.name}` : 'Dùng thử 14 ngày'}
             </span>
           </div>
           <div className="mt-3 flex items-center gap-2 rounded-lg bg-page px-3 py-2 text-xs text-muted">
@@ -379,6 +559,20 @@ function SuccessView({ titleId, email, business, onClose }: SuccessProps) {
               Đã gửi hướng dẫn tới <b className="text-ink">{email}</b>
             </span>
           </div>
+          {order && (
+            <div className="mt-2 grid grid-cols-2 gap-2 text-xs">
+              <div className="rounded-lg bg-page px-3 py-2">
+                <div className="text-subtle">Mã đối soát</div>
+                <div className="font-extrabold tracking-wide text-brand">{order.code}</div>
+              </div>
+              <div className="rounded-lg bg-page px-3 py-2">
+                <div className="text-subtle">Số tiền</div>
+                <div className="font-extrabold">
+                  {formatVnd(order.amount)}đ/{order.cycle === 'year' ? 'năm' : 'tháng'}
+                </div>
+              </div>
+            </div>
+          )}
         </div>
 
         {/* Next steps */}
