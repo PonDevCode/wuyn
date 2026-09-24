@@ -45,6 +45,18 @@ const dots: [number, number, number, number, boolean][] = [
   [0, 5, 10, -2, false],
   [1, -5, 11, -6, false],
   [1, 4, 12, -8, true],
+  [0, -11, 12, -4, true],
+  [0, -4, 10, -9, false],
+  [0, 1, 13, -1, false],
+  [0, 9, 11, -7, true],
+  [0, -7, 9, -3, true],
+  [0, 6, 14, -12, false],
+  [1, -10, 12, -5, false],
+  [1, -6, 9, -8, true],
+  [1, -1, 11, -3, false],
+  [1, 0, 13, -10, true],
+  [1, 8, 10, -6, false],
+  [1, 13, 12, -2, true],
 ];
 
 export default function HeroGrid() {
