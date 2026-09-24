@@ -150,10 +150,10 @@ export default function Industries() {
   const cur = data[active];
 
   return (
-    <section id="theo-nganh" className="relative overflow-hidden px-4 pb-16 pt-14 sm:px-8 lg:pb-[54px] lg:pt-16">
+    <section id="theo-nganh" className="relative px-4 pb-16 pt-14 sm:px-8 lg:pb-[54px] lg:pt-16">
       <div
         aria-hidden="true"
-        className="absolute inset-0 bg-[radial-gradient(60%_50%_at_50%_60%,rgba(0,75,236,0.07),rgba(0,75,236,0))]"
+        className="absolute inset-0 bg-[radial-gradient(ellipse_60%_40%_at_50%_55%,rgba(0,75,236,0.07),rgba(0,75,236,0))]"
       />
       <Reveal className="relative">
         <SectionHead
@@ -183,7 +183,7 @@ export default function Industries() {
                 className={`h-11 shrink-0 cursor-pointer whitespace-nowrap rounded-xl border px-5 text-sm font-bold transition-colors duration-200 focus:outline-none focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-brand sm:h-12 sm:px-6 sm:text-[15px] ${
                   on
                     ? 'border-[#B9CCF4] bg-tint text-brand'
-                    : 'border-transparent bg-white text-ink shadow-card hover:border-[#B9CCF4]'
+                    : 'border-[#E3E9F2] bg-white/85 text-ink shadow-[0_1px_2px_rgba(11,20,36,0.05)] backdrop-blur-sm hover:border-[#B9CCF4] hover:bg-white'
                 }`}
               >
                 {x.tab}

@@ -42,17 +42,15 @@ export default function Footer() {
       <div className="relative h-[520px] overflow-hidden bg-page sm:h-[560px]">
         <div
           aria-hidden="true"
-          className="absolute inset-0 [background-size:44px_44px]"
+          className="bg-grid absolute inset-0"
           style={{
-            backgroundImage:
-              'linear-gradient(#E6EBF3 1px, transparent 1px), linear-gradient(90deg, #E6EBF3 1px, transparent 1px)',
-            maskImage: 'radial-gradient(max(30%, 360px) 75% at 50% 45%, #000, transparent)',
-            WebkitMaskImage: 'radial-gradient(max(30%, 360px) 75% at 50% 45%, #000, transparent)',
+            maskImage: 'radial-gradient(ellipse max(34%, 360px) 42% at 50% 45%, #000 30%, transparent)',
+            WebkitMaskImage: 'radial-gradient(ellipse max(34%, 360px) 42% at 50% 45%, #000 30%, transparent)',
           }}
         />
         <div
           aria-hidden="true"
-          className="absolute left-1/2 top-[170px] -ml-[450px] -mt-[230px] h-[460px] w-[900px] rounded-full bg-[radial-gradient(closest-side,rgba(0,75,236,0.10),rgba(0,75,236,0))]"
+          className="absolute left-1/2 top-[210px] -ml-[450px] -mt-[210px] h-[420px] w-[900px] rounded-full bg-[radial-gradient(closest-side,rgba(0,75,236,0.10),rgba(0,75,236,0))]"
         />
         <svg
           width="3840"
