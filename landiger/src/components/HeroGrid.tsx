@@ -1,9 +1,9 @@
-// Diagonal background grid of the hero, drawn in SVG so small dots can travel along the lines.
+// Diagonal background grid of the hero, drawn in SVG so light streaks can travel along the lines.
 // Same geometry as the original CSS: two line families at 12.4° and 121.8°, 62px apart.
 
 const SPACING = 62;
 const REACH = 1700; // half-length of each line from the centre of the hero, in px
-const DOT_REACH = 950; // dots only travel the part of a line that is usually on screen
+const RUN_REACH = 950; // streaks only travel the part of a line that is usually on screen
 const COUNT = 22; // lines on each side of the centre, per family
 
 const rad = (deg: number) => (deg * Math.PI) / 180;
@@ -30,34 +30,30 @@ function linePath(family: number, k: number, reverse = false, reach = REACH) {
 const lines = families.flatMap((_, f) => Array.from({ length: COUNT * 2 + 1 }, (_, i) => linePath(f, i - COUNT)));
 
 // [family, line offset from centre, seconds to cross, start offset (s), reverse]
-const dots: [number, number, number, number, boolean][] = [
-  [0, -6, 11, 0, false],
-  [0, -2, 14, -6, true],
-  [0, 3, 12, -3, false],
-  [0, 7, 16, -10, true],
-  [0, -9, 13, -8, false],
-  [1, -8, 10, -2, true],
-  [1, -3, 12, -7, false],
-  [1, 2, 9, -4, true],
-  [1, 6, 13, -1, false],
-  [1, 11, 11, -9, true],
-  [0, 0, 9, -5, true],
-  [0, 5, 10, -2, false],
-  [1, -5, 11, -6, false],
-  [1, 4, 12, -8, true],
-  [0, -11, 12, -4, true],
-  [0, -4, 10, -9, false],
-  [0, 1, 13, -1, false],
-  [0, 9, 11, -7, true],
-  [0, -7, 9, -3, true],
-  [0, 6, 14, -12, false],
-  [1, -10, 12, -5, false],
-  [1, -6, 9, -8, true],
-  [1, -1, 11, -3, false],
-  [1, 0, 13, -10, true],
-  [1, 8, 10, -6, false],
-  [1, 13, 12, -2, true],
+const streaks: [number, number, number, number, boolean][] = [
+  [0, -9, 8, 0, false],
+  [0, -6, 10, -6, true],
+  [0, -2, 9, -3, false],
+  [0, 1, 11, -8, true],
+  [0, 4, 8, -1, false],
+  [0, 7, 10, -5, true],
+  [0, 10, 9, -9, false],
+  [1, -10, 9, -2, true],
+  [1, -6, 7, -7, false],
+  [1, -3, 10, -4, true],
+  [1, 0, 8, -9, false],
+  [1, 3, 9, -1, true],
+  [1, 7, 11, -6, false],
+  [1, 11, 8, -3, true],
+  [0, -4, 9, -2, true],
+  [0, 8, 8, -7, false],
+  [0, -11, 10, -4, false],
+  [1, -8, 10, -5, true],
+  [1, 5, 8, -8, false],
+  [1, -1, 11, -2, true],
 ];
+
+const TAIL = 72; // streak length in px
 
 export default function HeroGrid() {
   return (
@@ -68,20 +64,29 @@ export default function HeroGrid() {
             <path key={i} d={d} />
           ))}
         </g>
+        <defs>
+          {/* Drawn along +x; animateMotion rotate="auto" turns it to face the direction of travel */}
+          <linearGradient id="heroStreak" gradientUnits="userSpaceOnUse" x1={-TAIL} y1="0" x2="0" y2="0">
+            <stop offset="0" stopColor="#0095FE" stopOpacity="0" />
+            <stop offset="0.7" stopColor="#0095FE" stopOpacity="0.45" />
+            <stop offset="1" stopColor="#004BEC" stopOpacity="1" />
+          </linearGradient>
+        </defs>
         <g className="motion-reduce:hidden">
-          {dots.map(([f, k, dur, begin, reverse], i) => {
-            const path = linePath(f, k, reverse, DOT_REACH);
-            return (
-              <g key={i}>
-                <circle r="8" fill="#0095FE" fillOpacity="0.16">
-                  <animateMotion dur={`${dur}s`} begin={`${begin}s`} repeatCount="indefinite" path={path} />
-                </circle>
-                <circle r="3.2" fill="#0095FE">
-                  <animateMotion dur={`${dur}s`} begin={`${begin}s`} repeatCount="indefinite" path={path} />
-                </circle>
-              </g>
-            );
-          })}
+          {streaks.map(([f, k, dur, begin, reverse], i) => (
+            <g key={i}>
+              <line x1={-TAIL} y1="0" x2="0" y2="0" stroke="url(#heroStreak)" strokeWidth="2" strokeLinecap="round" />
+              <circle r="6" fill="#0095FE" fillOpacity="0.16" />
+              <circle r="2.2" fill="#004BEC" />
+              <animateMotion
+                dur={`${dur}s`}
+                begin={`${begin}s`}
+                repeatCount="indefinite"
+                rotate="auto"
+                path={linePath(f, k, reverse, RUN_REACH)}
+              />
+            </g>
+          ))}
         </g>
       </svg>
     </svg>
