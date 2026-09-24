@@ -46,7 +46,7 @@ export default function Header() {
     <header
       className={`fixed inset-x-0 top-0 z-50 flex h-16 items-center justify-between border-b px-4 transition-[background-color,border-color,box-shadow] duration-300 lg:h-[72px] lg:px-8 xl:px-[max(120px,calc(50%-600px))] ${
         scrolled || open
-          ? 'border-[#E8E9EC] bg-white/95 shadow-[0_8px_24px_-18px_rgba(11,20,36,0.35)] backdrop-blur-md'
+          ? 'border-[#E8E9EC] bg-white shadow-[0_8px_24px_-18px_rgba(11,20,36,0.35)]'
           : 'border-transparent bg-transparent'
       } ${scrolled ? 'animate-slide-down' : ''}`}
     >

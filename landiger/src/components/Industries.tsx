@@ -189,7 +189,7 @@ export default function Industries() {
                 className={`h-11 shrink-0 cursor-pointer whitespace-nowrap rounded-xl border px-5 text-sm font-bold transition-colors duration-200 focus:outline-none focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-brand sm:h-12 sm:px-6 sm:text-[15px] ${
                   on
                     ? 'border-[#B9CCF4] bg-tint text-brand'
-                    : 'border-[#E3E9F2] bg-white/85 text-ink shadow-[0_1px_2px_rgba(11,20,36,0.05)] backdrop-blur-sm hover:border-[#B9CCF4] hover:bg-white'
+                    : 'border-[#E3E9F2] bg-white/90 text-ink shadow-[0_1px_2px_rgba(11,20,36,0.05)] hover:border-[#B9CCF4] hover:bg-white'
                 }`}
               >
                 {x.tab}

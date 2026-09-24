@@ -99,12 +99,13 @@ export default function Hero() {
             }}
           />
           <div className="absolute inset-x-0 top-0 h-[200px] bg-gradient-to-b from-page via-page/90 via-45% to-page/0" />
+          {/* Solid wash behind the headline (instead of a backdrop blur, which glitches in Chrome) */}
           <div
             aria-hidden="true"
-            className="absolute left-1/2 top-[calc(50%-280px)] h-[440px] w-[min(1100px,100%)] -translate-x-1/2 rounded-[40px] backdrop-blur-[4px]"
+            className="absolute left-1/2 top-[calc(50%-300px)] h-[480px] w-[min(1200px,100%)] -translate-x-1/2"
             style={{
-              maskImage: 'radial-gradient(closest-side, #000 65%, transparent)',
-              WebkitMaskImage: 'radial-gradient(closest-side, #000 65%, transparent)',
+              background:
+                'radial-gradient(closest-side, rgba(244,246,250,0.97) 55%, rgba(244,246,250,0.85) 75%, rgba(244,246,250,0))',
             }}
           />
 
