@@ -54,6 +54,7 @@ const streaks: [number, number, number, number, boolean][] = [
 ];
 
 const TAIL = 72; // streak length in px
+const SPEED = 2; // multiplier on the base speeds below (1 = ~200px/s)
 
 export default function HeroGrid() {
   return (
@@ -79,8 +80,8 @@ export default function HeroGrid() {
               <circle r="6" fill="#0095FE" fillOpacity="0.16" />
               <circle r="2.2" fill="#004BEC" />
               <animateMotion
-                dur={`${dur}s`}
-                begin={`${begin}s`}
+                dur={`${dur / SPEED}s`}
+                begin={`${begin / SPEED}s`}
                 repeatCount="indefinite"
                 rotate="auto"
                 path={linePath(f, k, reverse, RUN_REACH)}
