@@ -1,6 +1,16 @@
 'use client';
 
-import { useLayoutEffect, useRef, useState } from 'react';
+import { useLayoutEffect, useRef, useState, type ReactNode } from 'react';
+
+type ScalerProps = {
+  /** Design width of the artwork, in px */
+  width: number;
+  /** Design height of the artwork, in px */
+  height: number;
+  fluid?: boolean;
+  className?: string;
+  children: ReactNode;
+};
 
 /**
  * Renders fixed-size artwork (mockups, illustrations) and shrinks it proportionally
@@ -8,8 +18,8 @@ import { useLayoutEffect, useRef, useState } from 'react';
  * With `fluid`, the child instead stretches to the container width down to `width`,
  * and only scales below that.
  */
-export default function Scaler({ width, height, fluid = false, className, children }) {
-  const ref = useRef(null);
+export default function Scaler({ width, height, fluid = false, className, children }: ScalerProps) {
+  const ref = useRef<HTMLDivElement>(null);
   const [box, setBox] = useState({ w: width, scale: 1 });
 
   useLayoutEffect(() => {

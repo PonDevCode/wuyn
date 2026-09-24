@@ -3,7 +3,17 @@ import senspa from '@/assets/senspa.png';
 
 const soft = 'shadow-card';
 
-const menu = [
+type MenuItem = {
+  label: string;
+  d: string;
+  circle?: boolean;
+  person?: boolean;
+  /** x, y, width, height, radius */
+  rect?: [number, number, number, number, number];
+  badge?: string;
+};
+
+const menu: MenuItem[] = [
   { label: 'Website', d: 'M3 12h18M12 3c3 3 3 15 0 18M12 3c-3 3-3 15 0 18', circle: true },
   { label: 'Lịch hẹn', d: 'M3 10h18M8 3v4M16 3v4', rect: [3, 5, 18, 16, 3], badge: '12' },
   { label: 'Khách hàng', d: 'M2 21a7 7 0 0 1 14 0M16 4a4 4 0 0 1 0 8M22 21a7 7 0 0 0-4-6.3', person: true },
@@ -13,12 +23,37 @@ const menu = [
 ];
 
 const appointments = [
-  { time: '09:30', init: 'T', bg: '#F4E3E7', fg: '#9E2A4B', name: 'Chị Thảo', desc: 'Chăm sóc da · KTV Mai', status: 'Đã xác nhận' },
-  { time: '11:00', init: 'M', bg: '#E3EBF7', fg: '#1E4E8C', name: 'Anh Minh', desc: 'Gội dưỡng sinh · KTV Hằng', status: 'Đã xác nhận' },
-  { time: '14:30', init: 'L', bg: '#F6EBD9', fg: '#7A4A0B', name: 'Chị Lan', desc: 'Massage body · từ website', status: 'Đã cọc', isNew: true },
+  {
+    time: '09:30',
+    init: 'T',
+    bg: '#F4E3E7',
+    fg: '#9E2A4B',
+    name: 'Chị Thảo',
+    desc: 'Chăm sóc da · KTV Mai',
+    status: 'Đã xác nhận',
+  },
+  {
+    time: '11:00',
+    init: 'M',
+    bg: '#E3EBF7',
+    fg: '#1E4E8C',
+    name: 'Anh Minh',
+    desc: 'Gội dưỡng sinh · KTV Hằng',
+    status: 'Đã xác nhận',
+  },
+  {
+    time: '14:30',
+    init: 'L',
+    bg: '#F6EBD9',
+    fg: '#7A4A0B',
+    name: 'Chị Lan',
+    desc: 'Massage body · từ website',
+    status: 'Đã cọc',
+    isNew: true,
+  },
 ];
 
-function MenuIcon({ item }) {
+function MenuIcon({ item }: { item: MenuItem }) {
   return (
     <svg width="14" height="14" viewBox="0 0 24 24" fill="none" aria-hidden="true">
       {item.circle && <circle cx="12" cy="12" r="9" stroke="#4B5059" strokeWidth="2" />}
@@ -88,12 +123,23 @@ export default function HeroDashboard() {
               </div>
               <div className="grow text-[11px] font-semibold text-ink">SEN Spa</div>
               <svg width="10" height="10" viewBox="0 0 24 24" fill="none" aria-hidden="true">
-                <path d="M7 9l5-5 5 5M7 15l5 5 5-5" stroke="#6B6F78" strokeWidth="2.4" strokeLinecap="round" strokeLinejoin="round" />
+                <path
+                  d="M7 9l5-5 5 5M7 15l5 5 5-5"
+                  stroke="#6B6F78"
+                  strokeWidth="2.4"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                />
               </svg>
             </div>
             <div className="flex items-center gap-2 rounded-lg bg-ink px-2 py-[7px] font-semibold text-white">
               <svg width="14" height="14" viewBox="0 0 24 24" fill="none" aria-hidden="true">
-                <path d="M4 4h7v7H4zM13 4h7v4h-7zM13 10h7v10h-7zM4 13h7v7H4z" stroke="#FFFFFF" strokeWidth="2" strokeLinejoin="round" />
+                <path
+                  d="M4 4h7v7H4zM13 4h7v4h-7zM13 10h7v10h-7zM4 13h7v7H4z"
+                  stroke="#FFFFFF"
+                  strokeWidth="2"
+                  strokeLinejoin="round"
+                />
               </svg>
               Tổng quan
             </div>
@@ -249,7 +295,9 @@ export default function HeroDashboard() {
         </div>
         <div className="flex gap-1.5 pl-[46px] text-[10px] font-semibold">
           <span className="flex h-[22px] items-center rounded-md bg-[#E8F7EF] px-2 text-ok">✓ Đã gửi nhắc Zalo</span>
-          <span className="flex h-[22px] items-center rounded-md bg-[#F1F2F4] px-2 text-[#4B5059]">Link cọc 100.000đ</span>
+          <span className="flex h-[22px] items-center rounded-md bg-[#F1F2F4] px-2 text-[#4B5059]">
+            Link cọc 100.000đ
+          </span>
         </div>
       </div>
 

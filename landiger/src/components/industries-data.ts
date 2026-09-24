@@ -1,7 +1,8 @@
 // Icon path helpers (48×48 viewBox), shared by the marquee and the industries tabs.
-export const circle = (cx, cy, r) => `M${cx - r} ${cy}a${r} ${r} 0 1 0 ${2 * r} 0a${r} ${r} 0 1 0 ${-2 * r} 0`;
+export const circle = (cx: number, cy: number, r: number) =>
+  `M${cx - r} ${cy}a${r} ${r} 0 1 0 ${2 * r} 0a${r} ${r} 0 1 0 ${-2 * r} 0`;
 
-export const roundRect = (x, y, w, h, r) =>
+export const roundRect = (x: number, y: number, w: number, h: number, r: number) =>
   `M${x + r} ${y}h${w - 2 * r}a${r} ${r} 0 0 1 ${r} ${r}v${h - 2 * r}a${r} ${r} 0 0 1 ${-r} ${r}h${-(w - 2 * r)}a${r} ${r} 0 0 1 ${-r} ${-r}v${-(h - 2 * r)}a${r} ${r} 0 0 1 ${r} ${-r}Z`;
 
 export const icons = {
@@ -9,7 +10,8 @@ export const icons = {
   salon: circle(15, 33, 5) + circle(33, 33, 5) + 'M18.5 29.5L33 10M29.5 29.5L15 10M40 12v6M37 15h6',
   fitness: 'M17 22V17A7 7 0 0 1 31 17V22' + circle(24, 31, 11) + 'M20 31h8',
   clinic: 'M24 39C14 32 8 26 8 19A8 8 0 0 1 24 15A8 8 0 0 1 40 19C40 26 34 32 24 39ZM13 25h5l3-5 4 10 3-5h7',
-  education: 'M24 17C19 14 13 14 8 15V37C13 36 19 36 24 39C29 36 35 36 40 37V15C35 14 29 14 24 17ZM24 17V39M24 4v6M21 7h6',
+  education:
+    'M24 17C19 14 13 14 8 15V37C13 36 19 36 24 39C29 36 35 36 40 37V15C35 14 29 14 24 17ZM24 17V39M24 4v6M21 7h6',
   studio: roundRect(7, 15, 34, 24, 6) + 'M17 15l2.5-4h9l2.5 4' + circle(24, 27, 6.5) + circle(35, 21, 0.4),
   fnb: 'M7 24H41C41 32 34 38 24 38C14 38 7 32 7 24ZM18 42h12M29 20L41 8M33 21L43 12M15 19c-2-3 2-5 0-8M21 19c-2-3 2-5 0-8',
   retail:

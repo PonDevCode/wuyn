@@ -1,38 +1,66 @@
 'use client';
 
 import { useCallback, useEffect, useRef, useState } from 'react';
+import { useInView } from '@/hooks/useInView';
 import Logo from './Logo';
+import Reveal from './Reveal';
 import Scaler from './Scaler';
 import SectionHead from './SectionHead';
 import { panels } from './SolutionPanels';
 
-const data = [
-  ['01', 'Website chuyên nghiệp', 'Chọn mẫu theo ngành, sửa chữ và ảnh rồi xuất bản với tên miền riêng. Không cần biết code.', 'landiger.com / website'],
-  ['02', 'Đặt lịch và nhắc hẹn tự động', 'Khách tự chọn dịch vụ và giờ trống. Landiger xếp lịch cho nhân viên và nhắc khách qua Zalo.', 'landiger.com / lịch hẹn'],
-  ['03', 'Khách hàng và doanh thu một chỗ', 'Mỗi lượt đặt tự thành hồ sơ khách. Xem lịch sử, chi tiêu và doanh thu theo ngày, tuần, tháng.', 'landiger.com / khách hàng'],
-  ['04', 'Giữ chân khách quay lại', 'Lọc khách lâu chưa quay lại, gửi ưu đãi qua Zalo và theo dõi ai đã đặt lại lịch.', 'landiger.com / marketing'],
+// [number, title, description, preview URL]
+const data: [string, string, string, string][] = [
+  [
+    '01',
+    'Website chuyên nghiệp',
+    'Chọn mẫu theo ngành, sửa chữ và ảnh rồi xuất bản với tên miền riêng. Không cần biết code.',
+    'landiger.com / website',
+  ],
+  [
+    '02',
+    'Đặt lịch và nhắc hẹn tự động',
+    'Khách tự chọn dịch vụ và giờ trống. Landiger xếp lịch cho nhân viên và nhắc khách qua Zalo.',
+    'landiger.com / lịch hẹn',
+  ],
+  [
+    '03',
+    'Khách hàng và doanh thu một chỗ',
+    'Mỗi lượt đặt tự thành hồ sơ khách. Xem lịch sử, chi tiêu và doanh thu theo ngày, tuần, tháng.',
+    'landiger.com / khách hàng',
+  ],
+  [
+    '04',
+    'Giữ chân khách quay lại',
+    'Lọc khách lâu chưa quay lại, gửi ưu đãi qua Zalo và theo dõi ai đã đặt lại lịch.',
+    'landiger.com / marketing',
+  ],
 ];
 
 const INTERVAL = 6000;
 
 export default function Solution() {
   const [active, setActive] = useState(0);
-  const timer = useRef(null);
+  const timer = useRef<ReturnType<typeof setInterval> | undefined>(undefined);
 
   const start = useCallback(() => {
     clearInterval(timer.current);
     timer.current = setInterval(() => setActive((a) => (a + 1) % data.length), INTERVAL);
   }, []);
 
+  // Tabs only start rotating once the visitor has scrolled to this section.
+  const [sectionRef, inView] = useInView<HTMLElement>({ threshold: 0.3 });
+
   useEffect(() => {
+    if (!inView) return undefined;
     start();
     return () => clearInterval(timer.current);
-  }, [start]);
+  }, [start, inView]);
 
   const Panel = panels[active];
 
   return (
     <section
+      ref={sectionRef}
       id="giai-phap"
       className="relative grid grid-cols-[minmax(0,1fr)] gap-10 overflow-hidden px-4 py-16 sm:px-8 lg:grid-cols-[minmax(0,470px)_minmax(0,620px)] lg:items-center lg:justify-between lg:gap-12 lg:px-[max(32px,calc(50%-580px))] lg:py-[100px]"
     >
@@ -45,7 +73,7 @@ export default function Solution() {
         }}
       />
 
-      <div className="relative flex flex-col gap-[30px]">
+      <Reveal className="relative flex flex-col gap-[30px]">
         <div className="flex flex-col gap-3.5">
           <SectionHead
             align="left"
@@ -76,16 +104,15 @@ export default function Solution() {
               >
                 <div className="flex items-baseline gap-3.5">
                   <span className={`text-[13px] font-extrabold ${on ? 'text-brand' : 'text-faint'}`}>{num}</span>
-                  <span className={`text-base font-extrabold sm:text-lg ${on ? 'text-ink' : 'text-subtle'}`}>{title}</span>
+                  <span className={`text-[15px] font-extrabold sm:text-base ${on ? 'text-ink' : 'text-subtle'}`}>
+                    {title}
+                  </span>
                 </div>
                 {on && (
                   <>
-                    <div className="mt-2 pl-9 text-sm leading-relaxed text-muted">{desc}</div>
+                    <div className="mt-2 pl-9 text-[13px] leading-relaxed text-muted sm:text-sm">{desc}</div>
                     <div className="ml-9 mt-3.5 h-[3px] overflow-hidden rounded-sm bg-[#E6EBF3]">
-                      <div
-                        key={active}
-                        className="h-full animate-fill rounded-sm bg-gradient-to-r from-sky to-brand"
-                      />
+                      <div key={active} className="h-full animate-fill rounded-sm bg-gradient-to-r from-sky to-brand" />
                     </div>
                   </>
                 )}
@@ -93,9 +120,9 @@ export default function Solution() {
             );
           })}
         </div>
-      </div>
+      </Reveal>
 
-      <div className="relative">
+      <Reveal delay={150} className="relative">
         <div
           aria-hidden="true"
           className="absolute -inset-x-10 -inset-y-12 rounded-full bg-[radial-gradient(closest-side,rgba(0,75,236,0.10),rgba(0,75,236,0))]"
@@ -118,12 +145,10 @@ export default function Solution() {
             </div>
           </div>
         </Scaler>
-        <div
-          className="absolute -right-2 -top-6 z-[2] size-14 animate-bob rounded-[18px] bg-gradient-to-br from-white to-[#E9EEF6] p-2.5 shadow-[0_20px_30px_-14px_rgba(11,20,36,0.4)] sm:-right-[30px] sm:-top-[34px] sm:size-[68px] sm:rounded-[20px] sm:p-3"
-        >
+        <div className="absolute -right-2 -top-6 z-[2] size-14 animate-bob rounded-[18px] bg-gradient-to-br from-white to-[#E9EEF6] p-2.5 shadow-[0_20px_30px_-14px_rgba(11,20,36,0.4)] sm:-right-[30px] sm:-top-[34px] sm:size-[68px] sm:rounded-[20px] sm:p-3">
           <Logo id="svLogo" size="100%" />
         </div>
-      </div>
+      </Reveal>
     </section>
   );
 }

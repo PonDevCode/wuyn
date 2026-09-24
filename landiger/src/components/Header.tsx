@@ -13,14 +13,23 @@ const links = [
 ];
 
 const ctaCls =
-  'flex h-11 items-center justify-center whitespace-nowrap rounded-full bg-brand px-[22px] text-[15px] font-semibold text-white hover:bg-[#0040cc] hover:text-white';
+  'flex h-10 items-center justify-center whitespace-nowrap rounded-full bg-brand px-5 text-sm font-semibold text-white hover:bg-[#0040cc] hover:text-white';
 
 export default function Header() {
   const [open, setOpen] = useState(false);
+  // Transparent over the hero; turns into a white bar that slides down once the page is scrolled.
+  const [scrolled, setScrolled] = useState(false);
+
+  useEffect(() => {
+    const onScroll = () => setScrolled(window.scrollY > 24);
+    onScroll();
+    window.addEventListener('scroll', onScroll, { passive: true });
+    return () => window.removeEventListener('scroll', onScroll);
+  }, []);
 
   useEffect(() => {
     if (!open) return undefined;
-    const onKey = (e) => e.key === 'Escape' && setOpen(false);
+    const onKey = (e: KeyboardEvent) => e.key === 'Escape' && setOpen(false);
     const onResize = () => window.innerWidth >= 1024 && setOpen(false);
     window.addEventListener('keydown', onKey);
     window.addEventListener('resize', onResize);
@@ -34,13 +43,19 @@ export default function Header() {
   const tab = open ? 0 : -1;
 
   return (
-    <header className="sticky top-0 z-50 flex h-16 items-center justify-between border-b border-[#E8E9EC] bg-white px-4 lg:h-20 lg:px-8 xl:px-[max(120px,calc(50%-600px))]">
-      <a href="#" className="flex items-center gap-2.5 text-[21px] font-bold tracking-[-0.02em] lg:text-2xl">
-        <Logo id="lgBarNav" />
+    <header
+      className={`fixed inset-x-0 top-0 z-50 flex h-16 items-center justify-between border-b px-4 transition-[background-color,border-color,box-shadow] duration-300 lg:h-[72px] lg:px-8 xl:px-[max(120px,calc(50%-600px))] ${
+        scrolled || open
+          ? 'border-[#E8E9EC] bg-white/95 shadow-[0_8px_24px_-18px_rgba(11,20,36,0.35)] backdrop-blur-md'
+          : 'border-transparent bg-transparent'
+      } ${scrolled ? 'animate-slide-down' : ''}`}
+    >
+      <a href="#" className="flex items-center gap-2.5 text-xl font-bold tracking-[-0.02em] lg:text-[22px]">
+        <Logo id="lgBarNav" size={30} />
         Landiger
       </a>
 
-      <nav aria-label="Điều hướng chính" className="hidden gap-6 text-[15px] font-medium lg:flex xl:gap-9">
+      <nav aria-label="Điều hướng chính" className="hidden gap-6 text-sm font-medium lg:flex xl:gap-8">
         {links.map((l) => (
           <a key={l.label} href={l.href}>
             {l.label}
@@ -49,7 +64,7 @@ export default function Header() {
       </nav>
 
       <div className="hidden items-center gap-3 lg:flex">
-        <a href="#" className="flex h-11 items-center px-2.5 text-[15px] font-semibold xl:px-[18px]">
+        <a href="#" className="flex h-10 items-center px-2.5 text-sm font-semibold xl:px-4">
           Đăng nhập
         </a>
         <a href="#" className={ctaCls}>

@@ -28,7 +28,7 @@ function WebsitePanel() {
 const days = ['T2', 'T3', 'T4', 'T5', 'T6', 'T7'];
 const hours = ['9:00', '11:00', '13:00', '15:00', '17:00', '19:00'];
 // [day index, top, height, name, highlighted]
-const events = [
+const events: [day: number, top: number, height: number, name: string, highlighted?: boolean][] = [
   [0, 31, 90, 'Chị Thảo'],
   [0, 175, 90, 'Anh Tú'],
   [1, 79, 42, 'Chị Mai'],
@@ -60,10 +60,16 @@ function BookingPanel() {
         </div>
         {hours.map((h, i) => (
           <div key={h}>
-            <div className="absolute left-0 w-[42px] pt-1 text-center text-[9px] text-faint" style={{ top: 28 + i * 48 }}>
+            <div
+              className="absolute left-0 w-[42px] pt-1 text-center text-[9px] text-faint"
+              style={{ top: 28 + i * 48 }}
+            >
               {h}
             </div>
-            <div className="absolute left-[42px] right-0 border-t border-dashed border-[#EEF1F6]" style={{ top: 28 + i * 48 }} />
+            <div
+              className="absolute left-[42px] right-0 border-t border-dashed border-[#EEF1F6]"
+              style={{ top: 28 + i * 48 }}
+            />
           </div>
         ))}
         {events.map(([day, top, height, name, hl]) => (
@@ -176,7 +182,9 @@ function RetentionPanel() {
       <div className={`flex grow flex-col gap-3 rounded-[14px] p-4 ${soft}`}>
         <div className="flex items-center justify-between gap-2">
           <span className="text-[15px] font-extrabold">Chiến dịch: Mời khách quay lại</span>
-          <span className="shrink-0 rounded-md bg-[#E8F7EF] px-2 py-[3px] text-[10px] font-bold text-ok">Đang chạy</span>
+          <span className="shrink-0 rounded-md bg-[#E8F7EF] px-2 py-[3px] text-[10px] font-bold text-ok">
+            Đang chạy
+          </span>
         </div>
         <div className="flex flex-col gap-1.5">
           <div className="text-[10px] font-bold tracking-[0.1em] text-subtle">GỬI ĐẾN</div>
