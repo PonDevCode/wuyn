@@ -21,7 +21,7 @@ export default function Marquee() {
   return (
     <section
       id="nganh-nghe"
-      className="relative flex flex-col items-center gap-8 overflow-hidden py-12 sm:gap-12 sm:py-16"
+      className="relative flex flex-col items-center gap-8 overflow-hidden pb-10 pt-4 sm:gap-10 sm:pb-12 sm:pt-6"
     >
       <div
         aria-hidden="true"
@@ -48,7 +48,7 @@ export default function Marquee() {
           <ul className="m-0 flex w-max animate-marquee list-none p-0 hover:[animation-play-state:paused]">
             {[...items, ...items].map((it, i) => (
               <li key={i} className="shrink-0 pr-3 sm:pr-4" aria-hidden={i >= items.length}>
-                <div className="flex h-16 items-center gap-3 whitespace-nowrap rounded-2xl border border-transparent bg-white pl-3 pr-5 shadow-card transition duration-200 hover:-translate-y-0.5 hover:border-brand hover:shadow-[0_12px_24px_-14px_rgba(0,75,236,0.35)] sm:h-[72px] sm:pl-3.5 sm:pr-[22px]">
+                <div className="flex h-16 items-center gap-3 whitespace-nowrap rounded-2xl border border-[#E3E9F2] bg-white/85 pl-3 pr-5 shadow-[0_1px_2px_rgba(11,20,36,0.05)] backdrop-blur-sm transition duration-200 hover:-translate-y-0.5 hover:border-brand/40 hover:bg-white sm:h-[72px] sm:pl-3.5 sm:pr-[22px]">
                   <div
                     className="flex size-10 items-center justify-center rounded-xl sm:size-11"
                     style={{ background: `${it.color}1A` }}

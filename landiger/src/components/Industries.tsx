@@ -137,6 +137,12 @@ const data: Industry[] = [
   },
 ];
 
+// Only the card's left and right ends fade into the page; top, bottom and the shadow stay as they are.
+const sideFade = {
+  maskImage: 'linear-gradient(90deg, transparent, #000 7%, #000 93%, transparent)',
+  WebkitMaskImage: 'linear-gradient(90deg, transparent, #000 7%, #000 93%, transparent)',
+} as const;
+
 function Icon({ d, size, color, width = 2.8 }: { d: string; size: number; color: string; width?: number }) {
   return (
     <svg width={size} height={size} viewBox="0 0 48 48" fill="none" aria-hidden="true">
@@ -150,10 +156,10 @@ export default function Industries() {
   const cur = data[active];
 
   return (
-    <section id="theo-nganh" className="relative overflow-hidden px-4 pb-16 pt-14 sm:px-8 lg:pb-[54px] lg:pt-16">
+    <section id="theo-nganh" className="relative px-4 pb-16 pt-14 sm:px-8 lg:pb-[54px] lg:pt-16">
       <div
         aria-hidden="true"
-        className="absolute inset-0 bg-[radial-gradient(60%_50%_at_50%_60%,rgba(0,75,236,0.07),rgba(0,75,236,0))]"
+        className="absolute inset-0 bg-[radial-gradient(ellipse_60%_40%_at_50%_55%,rgba(0,75,236,0.07),rgba(0,75,236,0))]"
       />
       <Reveal className="relative">
         <SectionHead
@@ -183,7 +189,7 @@ export default function Industries() {
                 className={`h-11 shrink-0 cursor-pointer whitespace-nowrap rounded-xl border px-5 text-sm font-bold transition-colors duration-200 focus:outline-none focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-brand sm:h-12 sm:px-6 sm:text-[15px] ${
                   on
                     ? 'border-[#B9CCF4] bg-tint text-brand'
-                    : 'border-transparent bg-white text-ink shadow-card hover:border-[#B9CCF4]'
+                    : 'border-[#E3E9F2] bg-white/85 text-ink shadow-[0_1px_2px_rgba(11,20,36,0.05)] backdrop-blur-sm hover:border-[#B9CCF4] hover:bg-white'
                 }`}
               >
                 {x.tab}
@@ -192,97 +198,102 @@ export default function Industries() {
           })}
         </div>
 
-        <div
-          role="tabpanel"
-          className="relative mx-auto mt-4 flex max-w-[1120px] flex-col overflow-hidden rounded-[20px] bg-white shadow-[0_40px_80px_-50px_rgba(11,20,36,0.35)] sm:rounded-[28px] lg:mt-5 lg:h-[440px] lg:flex-row lg:gap-12"
-        >
+        {/* Extra bottom padding keeps the card shadow inside the masked area */}
+        <div className="relative mx-auto -mb-20 mt-4 max-w-[1120px] pb-20 lg:mt-5" style={sideFade}>
           <div
-            key={cur.key}
-            className="relative h-[300px] shrink-0 animate-rise overflow-hidden [--frame-h:300px] sm:h-[360px] sm:[--frame-h:360px] lg:h-[440px] lg:w-1/2 lg:[--frame-h:440px]"
-            style={{ background: cur.tint }}
+            role="tabpanel"
+            className="relative flex flex-col overflow-hidden rounded-[20px] bg-white shadow-[0_40px_80px_-50px_rgba(11,20,36,0.35)] sm:rounded-[28px] lg:h-[440px] lg:flex-row lg:gap-12"
           >
-            {cur.key === 'spa' ? (
-              <Image
-                src={senspa}
-                alt="Website mẫu SEN Spa"
-                sizes="(max-width: 1024px) 100vw, 560px"
-                className="absolute left-0 top-0 block h-auto w-full animate-page-scroll [animation-duration:18s]"
-              />
-            ) : (
-              <>
-                <div className="absolute inset-x-4 top-4 flex flex-col gap-3 rounded-[18px] bg-white p-4 shadow-[0_24px_40px_-24px_rgba(11,20,36,0.35)] sm:inset-x-10 sm:top-10 sm:p-[18px]">
-                  <div className="flex items-center gap-2.5">
-                    <div
-                      className="flex size-9 items-center justify-center rounded-[10px]"
-                      style={{ background: cur.tint }}
-                    >
-                      <Icon d={cur.icon} size={22} color="#004BEC" />
+            <div
+              key={cur.key}
+              className="relative h-[300px] shrink-0 animate-rise [--frame-h:300px] sm:h-[360px] sm:[--frame-h:360px] lg:h-[440px] lg:w-1/2 lg:[--frame-h:440px]"
+            >
+              <div className="absolute inset-0 overflow-hidden" style={{ background: cur.tint }}>
+                {cur.key === 'spa' && (
+                  <Image
+                    src={senspa}
+                    alt="Website mẫu SEN Spa"
+                    sizes="(max-width: 1024px) 100vw, 560px"
+                    className="absolute left-0 top-0 block h-auto w-full animate-page-scroll [animation-duration:18s]"
+                  />
+                )}
+              </div>
+              {cur.key !== 'spa' && (
+                <>
+                  <div className="absolute inset-x-[10%] top-6 flex lg:left-[17%] lg:right-[7%] flex-col gap-3 rounded-[18px] bg-white p-4 shadow-[0_24px_40px_-24px_rgba(11,20,36,0.35)] sm:top-10 sm:p-[18px]">
+                    <div className="flex items-center gap-2.5">
+                      <div
+                        className="flex size-9 items-center justify-center rounded-[10px]"
+                        style={{ background: cur.tint }}
+                      >
+                        <Icon d={cur.icon} size={22} color="#004BEC" />
+                      </div>
+                      <span className="text-[15px] font-extrabold">{cur.head}</span>
                     </div>
-                    <span className="text-[15px] font-extrabold">{cur.head}</span>
+                    {cur.rows?.map(([a, b, c]) => (
+                      <div key={a} className="flex items-center gap-3 rounded-xl bg-page px-3 py-[11px] text-[13px]">
+                        <b className="w-[46px] shrink-0">{a}</b>
+                        <span className="min-w-0 grow text-[#2A3348]">{b}</span>
+                        <span className="shrink-0 rounded-md bg-tint px-2 py-[3px] text-[11px] font-bold text-brand">
+                          {c}
+                        </span>
+                      </div>
+                    ))}
                   </div>
-                  {cur.rows?.map(([a, b, c]) => (
-                    <div key={a} className="flex items-center gap-3 rounded-xl bg-page px-3 py-[11px] text-[13px]">
-                      <b className="w-[46px] shrink-0">{a}</b>
-                      <span className="min-w-0 grow text-[#2A3348]">{b}</span>
-                      <span className="shrink-0 rounded-md bg-tint px-2 py-[3px] text-[11px] font-bold text-brand">
-                        {c}
-                      </span>
+                  <div className="absolute bottom-[26px] right-[10%] flex size-20 -rotate-[8deg] items-center justify-center rounded-3xl bg-gradient-to-br from-sky to-brand shadow-[0_24px_36px_-16px_rgba(0,75,236,0.55)] sm:size-24 sm:rounded-[28px]">
+                    <Icon d={cur.icon} size={52} color="#FFFFFF" width={2.6} />
+                  </div>
+                </>
+              )}
+              <div className="absolute bottom-5 left-[10%] flex h-8 lg:left-[17%] items-center gap-2 rounded-full bg-ink px-3 text-xs font-semibold text-white">
+                <span className="size-1.5 rounded-full bg-sky" />
+                {cur.chip}
+              </div>
+            </div>
+
+            <div
+              key={`${cur.key}-text`}
+              className="flex grow animate-rise flex-col justify-center gap-4 p-6 sm:p-8 lg:py-[30px] lg:pl-0 lg:pr-[88px]"
+            >
+              <div className="text-xl font-extrabold sm:text-2xl">{cur.title}</div>
+              <ul className="m-0 flex list-none flex-col gap-3 p-0">
+                {cur.bullets.map((b) => (
+                  <li key={b} className="flex items-start gap-3 text-sm leading-normal text-[#2A3348] sm:text-[15px]">
+                    <span className="mt-px flex size-[22px] shrink-0 items-center justify-center rounded-[7px] bg-tint">
+                      <svg width="12" height="12" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+                        <path
+                          d="M5 12.5l4.5 4.5L19.5 6.5"
+                          stroke="#004BEC"
+                          strokeWidth="3.4"
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                        />
+                      </svg>
+                    </span>
+                    {b}
+                  </li>
+                ))}
+              </ul>
+              <div className="flex flex-col gap-2.5">
+                <div className="text-sm font-bold">Thương hiệu tin dùng</div>
+                <div className="grid grid-cols-3 gap-2 sm:flex sm:gap-3">
+                  {[0, 1, 2].map((i) => (
+                    <div
+                      key={i}
+                      className="flex h-11 items-center justify-center rounded-[10px] border border-dashed border-[#C9D4E6] text-[10px] font-semibold text-[#8A94A8] sm:w-[110px]"
+                    >
+                      [LOGO KHÁCH]
                     </div>
                   ))}
                 </div>
-                <div className="absolute bottom-[26px] right-6 flex size-20 -rotate-[8deg] items-center justify-center rounded-3xl bg-gradient-to-br from-sky to-brand shadow-[0_24px_36px_-16px_rgba(0,75,236,0.55)] sm:size-24 sm:rounded-[28px]">
-                  <Icon d={cur.icon} size={52} color="#FFFFFF" width={2.6} />
-                </div>
-              </>
-            )}
-            <div className="absolute bottom-5 left-5 flex h-8 items-center gap-2 rounded-full bg-ink px-3 text-xs font-semibold text-white">
-              <span className="size-1.5 rounded-full bg-sky" />
-              {cur.chip}
-            </div>
-          </div>
-
-          <div
-            key={`${cur.key}-text`}
-            className="flex grow animate-rise flex-col justify-center gap-4 p-6 sm:p-8 lg:py-[30px] lg:pl-0 lg:pr-11"
-          >
-            <div className="text-xl font-extrabold sm:text-2xl">{cur.title}</div>
-            <ul className="m-0 flex list-none flex-col gap-3 p-0">
-              {cur.bullets.map((b) => (
-                <li key={b} className="flex items-start gap-3 text-sm leading-normal text-[#2A3348] sm:text-[15px]">
-                  <span className="mt-px flex size-[22px] shrink-0 items-center justify-center rounded-[7px] bg-tint">
-                    <svg width="12" height="12" viewBox="0 0 24 24" fill="none" aria-hidden="true">
-                      <path
-                        d="M5 12.5l4.5 4.5L19.5 6.5"
-                        stroke="#004BEC"
-                        strokeWidth="3.4"
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                      />
-                    </svg>
-                  </span>
-                  {b}
-                </li>
-              ))}
-            </ul>
-            <div className="flex flex-col gap-2.5">
-              <div className="text-sm font-bold">Thương hiệu tin dùng</div>
-              <div className="grid grid-cols-3 gap-2 sm:flex sm:gap-3">
-                {[0, 1, 2].map((i) => (
-                  <div
-                    key={i}
-                    className="flex h-11 items-center justify-center rounded-[10px] border border-dashed border-[#C9D4E6] text-[10px] font-semibold text-[#8A94A8] sm:w-[110px]"
-                  >
-                    [LOGO KHÁCH]
-                  </div>
-                ))}
               </div>
+              <a
+                href="#"
+                className="flex h-[50px] items-center justify-center gap-2.5 rounded-xl bg-brand px-6 text-[15px] font-bold text-white shadow-[0_14px_26px_-12px_rgba(0,75,236,0.55)] hover:text-white sm:self-start"
+              >
+                Xem mẫu cho ngành này <span aria-hidden="true">→</span>
+              </a>
             </div>
-            <a
-              href="#"
-              className="flex h-[50px] items-center justify-center gap-2.5 rounded-xl bg-brand px-6 text-[15px] font-bold text-white shadow-[0_14px_26px_-12px_rgba(0,75,236,0.55)] hover:text-white sm:self-start"
-            >
-              Xem mẫu cho ngành này <span aria-hidden="true">→</span>
-            </a>
           </div>
         </div>
       </Reveal>
