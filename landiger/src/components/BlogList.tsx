@@ -38,7 +38,7 @@ export default function BlogList({ posts, categories }: { posts: Post[]; categor
               <span className="self-start rounded-full bg-tint px-3 py-1 text-xs font-bold text-brand">
                 Bài mới nhất
               </span>
-              <h2 className="text-[22px] font-extrabold leading-snug text-ink group-hover:text-brand sm:text-[28px]">
+              <h2 className="text-[22px] font-extrabold leading-snug text-ink group-hover:text-brand sm:text-[24px]">
                 {lead.title}
               </h2>
               <p className="text-[15px] leading-[1.7] text-muted">{lead.description}</p>

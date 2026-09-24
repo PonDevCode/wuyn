@@ -84,7 +84,7 @@ export default async function PostPage({ params }: Props) {
       <Header />
       <main>
         <PageHero className="px-4 pb-20 pt-28 sm:px-8 lg:pb-28 lg:pt-40">
-          <div className="mx-auto flex max-w-[860px] flex-col items-center gap-4 text-center">
+          <div className="mx-auto flex max-w-[780px] flex-col items-center gap-3.5 text-center">
             <nav
               aria-label="Breadcrumb"
               className="flex flex-wrap items-center justify-center gap-1.5 text-[13px] text-subtle"
@@ -99,8 +99,8 @@ export default async function PostPage({ params }: Props) {
               <span aria-hidden="true">/</span>
               <span className="text-muted">{post.category}</span>
             </nav>
-            <h1 className="text-[clamp(26px,4.4vw,46px)] font-extrabold leading-[1.22] text-ink">{post.title}</h1>
-            <p className="max-w-[680px] text-[15px] leading-[1.7] text-[#3F4A5E] sm:text-[17px]">{post.description}</p>
+            <h1 className="text-[clamp(24px,3.2vw,36px)] font-extrabold leading-[1.3] text-ink">{post.title}</h1>
+            <p className="max-w-[640px] text-[15px] leading-[1.7] text-[#3F4A5E] sm:text-base">{post.description}</p>
             <div className="mt-1 flex flex-wrap items-center justify-center gap-2 text-[13px]">
               <span className="flex h-8 items-center gap-2 rounded-full bg-white px-3 font-semibold text-ink shadow-[0_1px_2px_rgba(11,20,36,0.06)]">
                 <Logo id="postAuthor" size={16} />
@@ -119,7 +119,7 @@ export default async function PostPage({ params }: Props) {
         <div className="relative z-10 -mt-10 grid gap-8 px-4 sm:px-8 lg:-mt-14 lg:grid-cols-[minmax(0,1fr)_300px] lg:gap-10 lg:px-[max(32px,calc(50%-560px))]">
           <article className="overflow-hidden rounded-3xl border border-[#E1E7F1] bg-white shadow-[0_30px_60px_-40px_rgba(11,20,36,0.35)]">
             <PostCover post={post} className="aspect-[3/1] sm:aspect-[5/1]" />
-            <div className="px-5 py-8 sm:px-10 sm:py-10 lg:px-14 lg:py-12">
+            <div className="px-5 py-8 sm:px-10 sm:py-10 lg:px-12 lg:py-10">
               <PostBody blocks={post.body} />
             </div>
           </article>
