@@ -23,3 +23,10 @@ export const SITE_KEYWORDS = [
 
 /** Short tagline used on the social share image. */
 export const SITE_TAGLINE = 'Từ website đến vận hành';
+
+/**
+ * Product demo video played by "Xem demo". A YouTube link (watch / youtu.be / shorts / embed) or a
+ * direct video file (e.g. '/demo.mp4' placed in public/). Leave empty and "Xem demo" opens the
+ * book-a-demo form instead. Can also be set with NEXT_PUBLIC_DEMO_VIDEO_URL.
+ */
+export const DEMO_VIDEO_URL = process.env.NEXT_PUBLIC_DEMO_VIDEO_URL ?? '';

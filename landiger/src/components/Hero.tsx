@@ -5,9 +5,12 @@ import HeroGrid from './HeroGrid';
 import HeroLanes from './HeroLanes';
 import HeroDashboard from './HeroDashboard';
 import Scaler from './Scaler';
+import { DEMO_VIDEO_URL } from '@/lib/site';
 
 const primaryBtn =
   'flex items-center gap-2.5 rounded-xl bg-brand font-bold text-white shadow-btn hover:bg-[#0040cc] hover:text-white';
+// "Xem demo" plays the demo video when one is set, otherwise opens the book-a-demo form.
+const watchDemo = DEMO_VIDEO_URL ? { 'data-video': '' } : { 'data-demo': '' };
 const secondaryBtn = 'flex items-center rounded-xl border border-line bg-white font-bold text-ink';
 
 type Slide = 0 | 1;
@@ -124,7 +127,7 @@ export default function Hero() {
               <a href="#" data-trial className={`${primaryBtn} h-[50px] px-6 text-[15px]`}>
                 Bắt đầu miễn phí <span aria-hidden="true">→</span>
               </a>
-              <a href="#" data-demo className={`${secondaryBtn} h-[50px] px-[22px] text-[15px]`}>
+              <a href="#" {...watchDemo} className={`${secondaryBtn} h-[50px] px-[22px] text-[15px]`}>
                 Xem demo
               </a>
             </div>
@@ -152,7 +155,11 @@ export default function Hero() {
               <a href="#" data-trial className={`${primaryBtn} h-12 px-6 text-[15px] font-semibold`}>
                 Bắt đầu miễn phí <span aria-hidden="true">→</span>
               </a>
-              <a href="#" data-demo className={`${secondaryBtn} h-12 border-[#D9DBE0] px-[22px] text-[15px] font-semibold`}>
+              <a
+                href="#"
+                {...watchDemo}
+                className={`${secondaryBtn} h-12 border-[#D9DBE0] px-[22px] text-[15px] font-semibold`}
+              >
                 Xem demo
               </a>
             </div>

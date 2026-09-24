@@ -1,16 +1,17 @@
 'use client';
 
 import { useEffect, useState } from 'react';
+import { usePathname } from 'next/navigation';
 import Logo from './Logo';
 import Wordmark from './Wordmark';
 
 const links = [
-  { href: '#top', label: 'Trang chủ' },
-  { href: '#giai-phap', label: 'Giải pháp' },
-  { href: '#nganh-nghe', label: 'Ngành nghề' },
-  { href: '#bang-gia', label: 'Bảng giá' },
-  { href: '#', label: 'Tin tức' },
-  { href: '#lien-he', label: 'Liên hệ' },
+  { href: '/#top', label: 'Trang chủ' },
+  { href: '/#giai-phap', label: 'Giải pháp' },
+  { href: '/#nganh-nghe', label: 'Ngành nghề' },
+  { href: '/#bang-gia', label: 'Bảng giá' },
+  { href: '/tin-tuc', label: 'Tin tức' },
+  { href: '#lien-he', label: 'Liên hệ' }, // the contact block is in the footer of every page
 ];
 
 const ctaCls =
@@ -18,6 +19,8 @@ const ctaCls =
 
 export default function Header() {
   const [open, setOpen] = useState(false);
+  const pathname = usePathname();
+  const current = (href: string) => href.startsWith('/tin-tuc') && pathname.startsWith('/tin-tuc');
   // Transparent over the hero; turns into a white bar that slides down once the page is scrolled.
   const [scrolled, setScrolled] = useState(false);
 
@@ -51,14 +54,19 @@ export default function Header() {
           : 'border-transparent bg-transparent'
       } ${scrolled ? 'animate-slide-down' : ''}`}
     >
-      <a href="#top" aria-label="Landiger – Trang chủ" className="flex items-center gap-2.5 lg:gap-3">
+      <a href="/#top" aria-label="Landiger – Trang chủ" className="flex items-center gap-2.5 lg:gap-3">
         <Logo id="lgBarNav" size={36} className="size-8 lg:size-10" />
         <Wordmark className="h-4 w-auto lg:h-[19px]" />
       </a>
 
       <nav aria-label="Điều hướng chính" className="hidden gap-6 text-sm font-medium lg:flex xl:gap-8">
         {links.map((l) => (
-          <a key={l.label} href={l.href}>
+          <a
+            key={l.label}
+            href={l.href}
+            aria-current={current(l.href) ? 'page' : undefined}
+            className={current(l.href) ? 'font-bold text-brand' : undefined}
+          >
             {l.label}
           </a>
         ))}
@@ -100,7 +108,8 @@ export default function Header() {
             href={l.href}
             onClick={close}
             tabIndex={tab}
-            className="flex min-h-12 items-center border-b border-[#EEF1F6] text-base font-semibold"
+            aria-current={current(l.href) ? 'page' : undefined}
+            className={`flex min-h-12 items-center border-b border-[#EEF1F6] text-base font-semibold ${current(l.href) ? 'text-brand' : ''}`}
           >
             {l.label}
           </a>
